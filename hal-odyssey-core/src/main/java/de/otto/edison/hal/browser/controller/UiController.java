@@ -53,7 +53,7 @@ public class UiController {
                     "           {\"name\":\"example\", \"href\":\"http://localhost:8080/rels/{rel}\", \"templated\": true}" +
                     "       ]," +
                     "       \"self\": {" +
-                    "           \"href\":\"" + link.getHref() + "\", \"title\":\"" + link.getTitle() + "\", \"type\":\"" + link.getType() + "\"" +
+                    "           \"href\":\"" + link.getHref() + "?foo\", \"title\":\"" + link.getTitle() + "\", \"type\":\"" + link.getType() + "\"" +
                     "       }," +
                     "       \"first\": {" +
                     "           \"href\":\"http://localhost:8080/example?page=0\"" +
@@ -91,6 +91,7 @@ public class UiController {
 
 
     private static final Predicate<? super Link> NON_PAGING_LINK_PREDICATE = (Link link) -> !PagerModel.PAGING_RELS.contains(link.getRel());
+    private static final Predicate<? super Link> NON_SELF_LINK_PREDICATE = (Link link) -> !"self".equals(link.getRel());
 
     @GetMapping("/")
     public ModelAndView getResource(final @RequestParam(required = false) String url) throws IOException {
@@ -102,6 +103,7 @@ public class UiController {
 
             return new ModelAndView("browser", new HashMap<String,Object>() {{
                 put("currentUrl", url);
+                put("self", hal.getLinks().getLinkBy("self").map(self->self.getHref().equals(url) ? null : self.getHref()).orElse(null));
                 put("customAttributes", hal.getAttributes()
                         .entrySet()
                         .stream()
@@ -111,6 +113,7 @@ public class UiController {
             }});
         } else {
             return new ModelAndView("browser", new HashMap<String,Object>() {{
+                put("self", null);
                 put("currentUrl", "http://");
                 put("customAttributes", emptyMap());
                 put("links", emptyList());
@@ -144,6 +147,7 @@ public class UiController {
                 .getLinks()
                 .stream()
                 .filter(NON_PAGING_LINK_PREDICATE)
+                .filter(NON_SELF_LINK_PREDICATE)
                 .map(link -> new LinkModel(link, matchingCuriTemplateFor(curies, link.getRel())))
                 .collect(toList());
     }

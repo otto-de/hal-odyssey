@@ -23,6 +23,12 @@
                                 <input class="form-control" name="url" type="url" autofocus="autofocus" th:value="${currentUrl}" id="url-input"></input>
                             </div>
                         </div>
+                        <div class="form-group row" th:if="${self != null}">
+                            <label for="url-self" class="col-md-1 col-form-label">Self</label>
+                            <div class="col-md-11">
+                                <p class="form-control-static" id="url-self" th:text="${self}">href</p>
+                            </div>
+                        </div>
                     </form>
                     <div th:if="${pager.available}"
                          th:include="fragments/browserFragments :: pager(${pager})">

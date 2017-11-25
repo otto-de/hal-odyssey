@@ -65,6 +65,7 @@
                        th:title="${link.relDesc}"
                        th:href="${link.relHref}"
                        th:if="${!#strings.isEmpty(link.relHref)}">
+                        <span class="glyphicon glyphicon-book" ></span>&nbsp;
                         <span th:text="${link.rel}">rel</span>
                     </a>
                     <!--
@@ -98,7 +99,7 @@
                        role="button"
                        th:href="${link.profile}"
                        th:if="${!#strings.isEmpty(link.profile)}">
-                        <span class="glyphicon glyphicon-question-sign" ></span>
+                        <span class="glyphicon glyphicon-book" ></span>
                     </a>&nbsp;
                 </td>
                 <td>
