@@ -32,6 +32,7 @@ import static de.otto.edison.hal.browser.controller.PagerModel.toPagerModel;
 import static de.otto.edison.hal.traverson.Traverson.traverson;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
+import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -53,7 +54,7 @@ public class UiController {
                     "           {\"name\":\"example\", \"href\":\"http://localhost:8080/rels/{rel}\", \"templated\": true}" +
                     "       ]," +
                     "       \"self\": {" +
-                    "           \"href\":\"" + link.getHref() + "?foo\", \"title\":\"" + link.getTitle() + "\", \"type\":\"" + link.getType() + "\"" +
+                    "           \"href\":\"" + link.getHref() + "\", \"title\":\"Some Resource\", \"type\":\"application/hal+json\", \"profile\":\"http://example.com/profiles/example\"" +
                     "       }," +
                     "       \"first\": {" +
                     "           \"href\":\"http://localhost:8080/example?page=0\"" +
@@ -103,7 +104,7 @@ public class UiController {
 
             return new ModelAndView("browser", new HashMap<String,Object>() {{
                 put("currentUrl", url);
-                put("self", hal.getLinks().getLinkBy("self").map(self->self.getHref().equals(url) ? null : self.getHref()).orElse(null));
+                put("self", hal.getLinks().getLinkBy("self").map(self->new LinkModel(self, empty())).orElse(null));
                 put("customAttributes", hal.getAttributes()
                         .entrySet()
                         .stream()

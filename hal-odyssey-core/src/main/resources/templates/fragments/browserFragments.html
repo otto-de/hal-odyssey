@@ -3,26 +3,26 @@
 <body>
 
     <div th:fragment="pager(pager)">
-        <ul class="pager">
+        <ul class="pager" th:if="${pager.available}">
             <li>
-                <a th:href="'/?url=' + ${pager.first.href}" data-toggle="tooltip" data-placement="top" data-delay="750" title="First Page" th:if="${pager.first != null}">
+                <button class="btn btn-default" th:href="'/?url=' + ${pager.first?.href}" data-toggle="tooltip" data-placement="top" data-delay="750" title="First Page" th:disabled="${pager.first == null}">
                     <span class="glyphicon glyphicon-fast-backward"></span>
-                </a>
+                </button>
             </li>
             <li>
-                <a th:href="'/?url=' + ${pager.prev.href}" data-toggle="tooltip" data-placement="top" data-delay="750" title="Previous Page" th:if="${pager.prev != null}">
+                <button class="btn btn-default" th:href="'/?url=' + ${pager.prev.href}" data-toggle="tooltip" data-placement="top" data-delay="750" title="Previous Page" th:disabled="${pager.prev == null}">
                     <span class="glyphicon glyphicon-backward"></span>
-                </a>
+                </button>
             </li>
             <li>
-                <a th:href="'/?url=' + ${pager.next.href}" data-toggle="tooltip" data-placement="top" data-delay="750" title="Next Page" th:if="${pager.next != null}">
+                <button class="btn btn-default" th:href="'/?url=' + ${pager.next.href}" data-toggle="tooltip" data-placement="top" data-delay="750" title="Next Page" th:disabled="${pager.next == null}">
                     <span class="glyphicon glyphicon-forward"></span>
-                </a>
+                </button>
             </li>
             <li>
-                <a th:href="'/?url=' + ${pager.last.href}" data-toggle="tooltip" data-placement="top" data-delay="750" title="Last Page" th:if="${pager.last != null}">
+                <button class="btn btn-default" th:href="'/?url=' + ${pager.last.href}" data-toggle="tooltip" data-placement="top" data-delay="750" title="Last Page" th:disabled="${pager.last == null}">
                     <span class="glyphicon glyphicon glyphicon-fast-forward"></span>
-                </a>
+                </button>
             </li>
         </ul>
     </div>
@@ -57,6 +57,14 @@
             </thead>
             <tbody>
             <tr th:each="link : ${links}">
+                <div th:include="fragments/browserFragments :: linkRow(${link})"></div>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:fragment="linkRow(link)">
+            <tr>
                 <td>
                     <a class="btn btn-default"
                        role="button"
@@ -131,8 +139,6 @@
                     </form>
                 </td>
             </tr>
-            </tbody>
-        </table>
     </div>
 </body>
 </html>

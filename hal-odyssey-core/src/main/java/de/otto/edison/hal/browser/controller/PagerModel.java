@@ -28,7 +28,7 @@ public class PagerModel {
         this.last = last;
         this.prev = prev;
         this.next = next;
-        this.available = first != null && last != null && prev != null && next != null;
+        this.available = first != null || last != null || prev != null || next != null;
     }
 
     public static PagerModel toPagerModel(final HalRepresentation hal) {

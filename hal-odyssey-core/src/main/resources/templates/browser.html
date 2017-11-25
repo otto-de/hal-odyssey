@@ -10,10 +10,10 @@
 <div class="container-fluid">
 
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-lg-9">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Current</h3>
+                    <h3 class="panel-title">Open</h3>
                 </div>
                 <div class="panel-body">
                     <form action="/" method="POST">
@@ -23,15 +23,40 @@
                                 <input class="form-control" name="url" type="url" autofocus="autofocus" th:value="${currentUrl}" id="url-input"></input>
                             </div>
                         </div>
-                        <div class="form-group row" th:if="${self != null}">
-                            <label for="url-self" class="col-md-1 col-form-label">Self</label>
-                            <div class="col-md-11">
-                                <p class="form-control-static" id="url-self" th:text="${self}">href</p>
-                            </div>
-                        </div>
                     </form>
-                    <div th:if="${pager.available}"
-                         th:include="fragments/browserFragments :: pager(${pager})">
+                    <div th:include="fragments/browserFragments :: pager(${pager})"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3" th:if="${self != null}">
+            <div class="panel panel-default" th:if="${self != null}">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Self</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group row">
+                        <label for="url-self" class="col-md-2 col-form-label">Href</label>
+                        <div class="col-md-10">
+                            <span id="url-self" th:text="${self.href}">href</span>
+                        </div>
+                    </div>
+                    <div class="form-group row" th:if="${!#strings.isEmpty(self.title)}">
+                        <label for="title-self" class="col-md-2 col-form-label">Title</label>
+                        <div class="col-md-10">
+                            <span id="title-self" th:text="${self.title}">title</span>
+                        </div>
+                    </div>
+                    <div class="form-group row" th:if="${!#strings.isEmpty(self.type)}">
+                        <label for="type-self" class="col-md-2 col-form-label">Type</label>
+                        <div id="type-self" class="col-md-10">
+                            <span th:text="${self.type}"></span>&nbsp;
+                            <a class="btn btn-default"
+                               role="button"
+                               th:href="${self.profile}"
+                               th:if="${!#strings.isEmpty(self.profile)}">
+                                <span class="glyphicon glyphicon-book" ></span>
+                            </a>&nbsp;
+                        </div>
                     </div>
                 </div>
             </div>
