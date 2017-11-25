@@ -12,6 +12,9 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Current</h3>
+                </div>
                 <div class="panel-body">
                     <form action="/" method="POST">
                         <div class="form-group row">
@@ -21,6 +24,9 @@
                             </div>
                         </div>
                     </form>
+                    <div th:if="${pager.available}"
+                         th:include="fragments/browserFragments :: pager(${pager})">
+                    </div>
                 </div>
             </div>
         </div>
@@ -33,103 +39,7 @@
                     <h3 class="panel-title">Links</h3>
                 </div>
                 <div class="panel-body">
-                    <table class="table table-hover">
-                        <thead>
-                        <tr>
-                            <th>Rel</th>
-                            <th>Title</th>
-                            <th>Name</th>
-                            <th>Type</th>
-                            <th>Href</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="link : ${links}">
-                            <td>
-                                <a class="btn btn-default"
-                                   role="button"
-                                   data-toggle="tooltip"
-                                   data-placement="right"
-                                   th:title="${link.relDesc}"
-                                   th:href="${link.relHref}"
-                                   th:if="${!#strings.isEmpty(link.relHref)}">
-                                    <span th:text="${link.rel}">rel</span>
-                                </a>
-                                <!--
-                                <button type="button"
-                                        class="btn btn-default"
-                                        data-toggle="popover"
-                                        data-placement="bottom"
-                                        title="href"
-                                        th:attr="data-content=${link.href}">
-                                    Show <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
-                                </button>
-                                -->
-
-                                <button type="button"
-                                        class="btn btn-default"
-                                        disabled="disabled"
-                                        th:if="${#strings.isEmpty(link.relHref)}">
-                                    <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
-                                    <span th:text="${link.rel}">rel</span>
-                                </button>
-                            </td>
-                            <td>
-                                <span th:text="${link.title}"></span>
-                            </td>
-                            <td>
-                                <span th:text="${link.name}"></span>
-                            </td>
-                            <td>
-                                <span th:text="${link.type}"></span>&nbsp;
-                                <a class="btn btn-default"
-                                   role="button"
-                                   th:href="${link.profile}"
-                                   th:if="${!#strings.isEmpty(link.profile)}">
-                                    <span class="glyphicon glyphicon-question-sign" ></span>
-                                </a>&nbsp;
-                            </td>
-                            <td>
-                                <p class="form-control-static" th:text="${link.href}">href</p>
-                                <a class="btn btn-primary"
-                                   role="button"
-                                   data-toggle="tooltip"
-                                   data-placement="bottom"
-                                   th:title="${link.href}"
-                                   th:href="'/?url=' + ${link.href}"
-                                   th:if="${!link.templated}">
-                                    GET<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                                </a>
-                                <form action="/"
-                                      method="POST"
-                                      th:if="${link.templated}">
-                                    <div class="form-group row" th:each="hrefParam : ${link.hrefParams}">
-                                        <label th:for="${hrefParam.key}" class="col-md-2 col-form-label" th:text="${hrefParam.key} + ':'">param</label>
-                                        <div class="col-md-10">
-                                            <input  class="form-control-sm" type="text" th:required="${hrefParam.required}" th:name="${hrefParam.key}"></input>
-                                        </div>
-                                    </div>
-                                    <input hidden="hidden" name="url" th:value="${link.href}" />
-                                    <!--
-                                    <button type="button"
-                                            class="btn btn-default"
-                                            data-toggle="popover"
-                                            data-placement="bottom"
-                                            title="href"
-                                            th:attr="data-content=${link.href}">
-                                        Show <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
-                                    </button>
-                                    -->
-                                    <button type="submit"
-                                            class="btn btn-primary"
-                                            th:title="${link.href}">
-                                        GET <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div th:include="fragments/browserFragments :: linkTable(${links})"></div>
                 </div>
             </div>
         </div>
@@ -139,20 +49,7 @@
                     <h3 class="panel-title">Custom Attributes</h3>
                 </div>
                 <div class="panel-body">
-                    <table class="table table-hover">
-                        <thead>
-                        <tr>
-                            <th>Key</th>
-                            <th>Value</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="attr : ${customAttributes.entrySet()}">
-                            <td th:text="${attr.getKey()}">key...</td>
-                            <td><pre><code th:text="${attr.getValue()}">some json</code></pre></td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div th:include="fragments/browserFragments :: attrTable(${customAttributes})"></div>
                 </div>
             </div>
         </div>

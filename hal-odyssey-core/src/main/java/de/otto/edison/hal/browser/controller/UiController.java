@@ -22,9 +22,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.damnhandy.uri.template.UriTemplate.fromTemplate;
 import static de.otto.edison.hal.CuriTemplate.matchingCuriTemplateFor;
+import static de.otto.edison.hal.browser.controller.PagerModel.UNAVAILABLE;
+import static de.otto.edison.hal.browser.controller.PagerModel.toPagerModel;
 import static de.otto.edison.hal.traverson.Traverson.traverson;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
@@ -41,7 +44,7 @@ public class UiController {
     private final LinkResolver fakeLinkResolver = new LinkResolver() {
         @Override
         public String apply(final Link link) throws IOException {
-            if (link.getHref().startsWith("http://localhost:8080")) {
+            if (link.getHref().startsWith("http://localhost:8080/example")) {
                 return "{" +
                         "   \"foo\":\"bar\"," +
                         "   \"foobar\":{\"one\":\"eins\",\"two\":\"zwei\"}," +
@@ -52,6 +55,18 @@ public class UiController {
                         "       ]," +
                         "       \"self\": {" +
                         "           \"href\":\"" + link.getHref() + "\", \"title\":\"" + link.getTitle() + "\", \"type\":\"" + link.getType() + "\"" +
+                        "       }," +
+                        "       \"first\": {" +
+                        "           \"href\":\"http://localhost:8080/example?page=0\"" +
+                        "       }," +
+                        "       \"next\": {" +
+                        "           \"href\":\"http://localhost:8080/example?page=5\"" +
+                        "       }," +
+                        "       \"prev\": {" +
+                        "           \"href\":\"http://localhost:8080/example?page=3\"" +
+                        "       }," +
+                        "       \"last\": {" +
+                        "           \"href\":\"http://localhost:8080/example?page=42\"" +
                         "       }," +
                         "       \"http://localhost:8080/rels/foo\": [" +
                         "           {\"href\":\"http://localhost:8080/foo/42\", \"title\":\"Foo 42\", \"type\":\"application/hal+json\", \"profile\":\"http://localhost:8080/profiles/test\"}," +
@@ -91,25 +106,43 @@ public class UiController {
                         .stream()
                         .collect(toMap(Entry::getKey, e -> prettyPrint(e.getValue()))));
                 put("links", toLinkModel(hal));
+                put("pager", toPagerModel(hal));
             }});
         } else {
             return new ModelAndView("browser", new HashMap<String,Object>() {{
                 put("currentUrl", "http://");
                 put("customAttributes", emptyMap());
                 put("links", emptyList());
+                put("pager", UNAVAILABLE);
             }});
         }
     }
 
+    private List<LinkTabModel> toLinkTabModel(final HalRepresentation hal) {
+        final List<Link> curies = hal.getLinks().getLinksBy("curies");
+        final List<String> sortedRels = hal.getLinks().getRels().stream().sorted().collect(toList());
+        return sortedRels
+                .stream()
+                .map(rel -> {
+                    final Optional<CuriTemplate> curiTemplate = matchingCuriTemplateFor(curies, rel);
+                    final List<LinkModel> relLinks = hal
+                            .getLinks()
+                            .getLinksBy(rel)
+                            .stream()
+                            .map(link->new LinkModel(link,curiTemplate))
+                            .collect(Collectors.toList());
+                    final LinkModel first = relLinks.get(0);
+                    return new LinkTabModel(first.rel, first.relHref, first.relDesc, relLinks);
+                })
+                .collect(toList());
+    }
+
     private List<LinkModel> toLinkModel(final HalRepresentation hal) {
+        final List<Link> curies = hal.getLinks().getLinksBy("curies");
         return hal
                 .getLinks()
                 .stream()
-                .map(link -> {
-                    final List<Link> curies = hal.getLinks().getLinksBy("curies");
-                    final Optional<CuriTemplate> curiTemplate = matchingCuriTemplateFor(curies, link.getRel());
-                    return new LinkModel(link, curiTemplate);
-                })
+                .map(link -> new LinkModel(link, matchingCuriTemplateFor(curies, link.getRel())))
                 .collect(toList());
     }
 
