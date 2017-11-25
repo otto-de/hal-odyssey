@@ -1,0 +1,2 @@
+include 'hal-odyssey-core'
+include 'hal-odyssey-server'
