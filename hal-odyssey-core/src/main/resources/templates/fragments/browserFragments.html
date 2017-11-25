@@ -76,17 +76,6 @@
                         <span class="glyphicon glyphicon-book" ></span>&nbsp;
                         <span th:text="${link.rel}">rel</span>
                     </a>
-                    <!--
-                    <button type="button"
-                            class="btn btn-default"
-                            data-toggle="popover"
-                            data-placement="bottom"
-                            title="href"
-                            th:attr="data-content=${link.href}">
-                        Show <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
-                    </button>
-                    -->
-
                     <button type="button"
                             class="btn btn-default"
                             disabled="disabled"
@@ -105,13 +94,15 @@
                     <span th:text="${link.type}"></span>&nbsp;
                     <a class="btn btn-default"
                        role="button"
+                       data-toggle="tooltip"
+                       data-placement="bottom"
+                       th:title="${link.profile}"
                        th:href="${link.profile}"
                        th:if="${!#strings.isEmpty(link.profile)}">
                         <span class="glyphicon glyphicon-book" ></span>
                     </a>&nbsp;
                 </td>
                 <td>
-                    <p class="form-control-static" th:text="${link.href}">href</p>
                     <a class="btn btn-primary"
                        role="button"
                        data-toggle="tooltip"
@@ -133,6 +124,8 @@
                         <input hidden="hidden" name="url" th:value="${link.href}" />
                         <button type="submit"
                                 class="btn btn-primary"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
                                 th:title="${link.href}">
                             GET <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
                         </button>
