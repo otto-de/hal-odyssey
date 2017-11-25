@@ -4,10 +4,16 @@ import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 
 public class PagerModel {
+    public static final Set<String> PAGING_RELS = new HashSet<>(asList("first", "next", "prev", "previous", "last"));
     public static final PagerModel UNAVAILABLE = new PagerModel(null, null, null, null);
+
     public final boolean available;
     public final LinkModel first;
     public final LinkModel last;

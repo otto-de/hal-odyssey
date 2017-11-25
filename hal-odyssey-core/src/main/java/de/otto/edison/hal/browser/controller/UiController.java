@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static com.damnhandy.uri.template.UriTemplate.fromTemplate;
@@ -41,60 +42,60 @@ public class UiController {
 
     private RestTemplate restTemplate = new RestTemplate();
 
-    private final LinkResolver fakeLinkResolver = new LinkResolver() {
-        @Override
-        public String apply(final Link link) throws IOException {
-            if (link.getHref().startsWith("http://localhost:8080/example")) {
-                return "{" +
-                        "   \"foo\":\"bar\"," +
-                        "   \"foobar\":{\"one\":\"eins\",\"two\":\"zwei\"}," +
-                        "   \"barfoo\":[{\"one\":\"eins\"},{\"two\":\"zwei\"}]," +
-                        "   \"_links\":{" +
-                        "       \"curies\": [" +
-                        "           {\"name\":\"example\", \"href\":\"http://localhost:8080/rels/{rel}\", \"templated\": true}" +
-                        "       ]," +
-                        "       \"self\": {" +
-                        "           \"href\":\"" + link.getHref() + "\", \"title\":\"" + link.getTitle() + "\", \"type\":\"" + link.getType() + "\"" +
-                        "       }," +
-                        "       \"first\": {" +
-                        "           \"href\":\"http://localhost:8080/example?page=0\"" +
-                        "       }," +
-                        "       \"next\": {" +
-                        "           \"href\":\"http://localhost:8080/example?page=5\"" +
-                        "       }," +
-                        "       \"prev\": {" +
-                        "           \"href\":\"http://localhost:8080/example?page=3\"" +
-                        "       }," +
-                        "       \"last\": {" +
-                        "           \"href\":\"http://localhost:8080/example?page=42\"" +
-                        "       }," +
-                        "       \"http://localhost:8080/rels/foo\": [" +
-                        "           {\"href\":\"http://localhost:8080/foo/42\", \"title\":\"Foo 42\", \"type\":\"application/hal+json\", \"profile\":\"http://localhost:8080/profiles/test\"}," +
-                        "           {\"href\":\"http://localhost:8080/foo/43\", \"title\":\"Foo 43\", \"type\":\"application/hal+json\"}," +
-                        "           {\"href\":\"http://localhost:8080/foo/44\", \"title\":\"Foo 44\", \"type\":\"application/hal+json\"}," +
-                        "           {\"href\":\"http://localhost:8080/foo/45\", \"title\":\"Foo 45\", \"type\":\"application/hal+json\"}," +
-                        "           {\"href\":\"http://localhost:8080/foo/46\", \"title\":\"Foo 46\", \"type\":\"application/hal+json\"}" +
-                        "       ]," +
-                        "       \"http://localhost:8080/link-relations/bar\": [" +
-                        "           {\"href\":\"http://localhost:8080/bar/42\", \"title\":\"Bar 42\", \"type\":\"application/hal+json\", \"profile\":\"http://localhost:8080/profiles/test\"}," +
-                        "           {\"href\":\"http://localhost:8080/bar/43\", \"title\":\"Bar 43\", \"type\":\"application/hal+json\"}," +
-                        "           {\"href\":\"http://localhost:8080/bar{/id}{?x}{&y}\", \"templated\": true, \"title\":\"Bar 44\", \"type\":\"application/hal+json\"}," +
-                        "           {\"href\":\"http://localhost:8080/bar/45\", \"title\":\"Bar 45\", \"type\":\"application/hal+json\"}," +
-                        "           {\"href\":\"http://localhost:8080/bar/46\", \"title\":\"Bar 46\", \"type\":\"application/hal+json\"}" +
-                        "       ]" +
-                        "   }" +
-                        "}";
-            } else {
-                return restTemplate.getForObject(URI.create(link.getHref()), String.class);
-            }
+    private final LinkResolver FAKE_LINK_RESOLVER = link -> {
+        if (link.getHref().startsWith("http://localhost:8080/example")) {
+            return "{" +
+                    "   \"foo\":\"bar\"," +
+                    "   \"foobar\":{\"one\":\"eins\",\"two\":\"zwei\"}," +
+                    "   \"barfoo\":[{\"one\":\"eins\"},{\"two\":\"zwei\"}]," +
+                    "   \"_links\":{" +
+                    "       \"curies\": [" +
+                    "           {\"name\":\"example\", \"href\":\"http://localhost:8080/rels/{rel}\", \"templated\": true}" +
+                    "       ]," +
+                    "       \"self\": {" +
+                    "           \"href\":\"" + link.getHref() + "\", \"title\":\"" + link.getTitle() + "\", \"type\":\"" + link.getType() + "\"" +
+                    "       }," +
+                    "       \"first\": {" +
+                    "           \"href\":\"http://localhost:8080/example?page=0\"" +
+                    "       }," +
+                    "       \"next\": {" +
+                    "           \"href\":\"http://localhost:8080/example?page=5\"" +
+                    "       }," +
+                    "       \"prev\": {" +
+                    "           \"href\":\"http://localhost:8080/example?page=3\"" +
+                    "       }," +
+                    "       \"last\": {" +
+                    "           \"href\":\"http://localhost:8080/example?page=42\"" +
+                    "       }," +
+                    "       \"http://localhost:8080/rels/foo\": [" +
+                    "           {\"href\":\"http://localhost:8080/foo/42\", \"title\":\"Foo 42\", \"type\":\"application/hal+json\", \"profile\":\"http://localhost:8080/profiles/test\"}," +
+                    "           {\"href\":\"http://localhost:8080/foo/43\", \"title\":\"Foo 43\", \"type\":\"application/hal+json\"}," +
+                    "           {\"href\":\"http://localhost:8080/foo/44\", \"title\":\"Foo 44\", \"type\":\"application/hal+json\"}," +
+                    "           {\"href\":\"http://localhost:8080/foo/45\", \"title\":\"Foo 45\", \"type\":\"application/hal+json\"}," +
+                    "           {\"href\":\"http://localhost:8080/foo/46\", \"title\":\"Foo 46\", \"type\":\"application/hal+json\"}" +
+                    "       ]," +
+                    "       \"http://localhost:8080/link-relations/bar\": [" +
+                    "           {\"href\":\"http://localhost:8080/bar/42\", \"title\":\"Bar 42\", \"type\":\"application/hal+json\", \"profile\":\"http://localhost:8080/profiles/test\"}," +
+                    "           {\"href\":\"http://localhost:8080/bar/43\", \"title\":\"Bar 43\", \"type\":\"application/hal+json\"}," +
+                    "           {\"href\":\"http://localhost:8080/bar{/id}{?x}{&y}\", \"templated\": true, \"title\":\"Bar 44\", \"type\":\"application/hal+json\"}," +
+                    "           {\"href\":\"http://localhost:8080/bar/45\", \"title\":\"Bar 45\", \"type\":\"application/hal+json\"}," +
+                    "           {\"href\":\"http://localhost:8080/bar/46\", \"title\":\"Bar 46\", \"type\":\"application/hal+json\"}" +
+                    "       ]" +
+                    "   }" +
+                    "}";
+        } else {
+            return restTemplate.getForObject(URI.create(link.getHref()), String.class);
         }
     };
-    public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+
+    private static final Predicate<? super Link> NON_PAGING_LINK_PREDICATE = (Link link) -> !PagerModel.PAGING_RELS.contains(link.getRel());
 
     @GetMapping("/")
     public ModelAndView getResource(final @RequestParam(required = false) String url) throws IOException {
         if (url != null) {
-            final HalRepresentation hal = traverson(fakeLinkResolver)
+            final HalRepresentation hal = traverson(FAKE_LINK_RESOLVER)
                     .startWith(url)
                     .getResource()
                     .orElse(EMPTY_HAL_REPRESENTATION);
@@ -142,6 +143,7 @@ public class UiController {
         return hal
                 .getLinks()
                 .stream()
+                .filter(NON_PAGING_LINK_PREDICATE)
                 .map(link -> new LinkModel(link, matchingCuriTemplateFor(curies, link.getRel())))
                 .collect(toList());
     }
