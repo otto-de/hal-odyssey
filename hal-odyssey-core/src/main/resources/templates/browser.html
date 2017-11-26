@@ -34,9 +34,10 @@
                             <span th:text="${self.type}"></span>&nbsp;
                             <a class="btn btn-default"
                                role="button"
+                               target="_blank"
                                th:href="${self.profile}"
                                th:if="${!#strings.isEmpty(self.profile)}">
-                                <span class="glyphicon glyphicon-book" ></span>
+                                <span class="glyphicon glyphicon-new-window" ></span>&nbsp;<span>Profile</span>
                             </a>&nbsp;
                         </div>
                     </div>

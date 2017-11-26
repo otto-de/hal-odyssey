@@ -5,24 +5,24 @@
     <div th:fragment="pager(pager)">
         <ul class="pager" th:if="${pager.available}">
             <li>
-                <button class="btn btn-default" th:href="'/?url=' + ${pager.first?.href}" data-toggle="tooltip" data-placement="top" data-delay="750" title="First Page" th:disabled="${pager.first == null}">
+                <a class="btn" th:classappend="${pager.first != null} ? 'btn-default' : 'disabled'" th:href="'/?url=' + ${pager.first?.href}" data-toggle="tooltip" data-placement="top" data-delay="750" title="First Page">
                     <span class="glyphicon glyphicon-fast-backward"></span>
-                </button>
+                </a>
             </li>
             <li>
-                <button class="btn btn-default" th:href="'/?url=' + ${pager.prev.href}" data-toggle="tooltip" data-placement="top" data-delay="750" title="Previous Page" th:disabled="${pager.prev == null}">
+                <a class="btn" th:classappend="${pager.prev != null} ? 'btn-default' : 'disabled'" th:href="'/?url=' + ${pager.prev?.href}" data-toggle="tooltip" data-placement="top" data-delay="750" title="Previous Page">
                     <span class="glyphicon glyphicon-backward"></span>
-                </button>
+                </a>
             </li>
             <li>
-                <button class="btn btn-default" th:href="'/?url=' + ${pager.next.href}" data-toggle="tooltip" data-placement="top" data-delay="750" title="Next Page" th:disabled="${pager.next == null}">
+                <a class="btn" th:classappend="${pager.next != null} ? 'btn-default' : 'disabled'" th:href="'/?url=' + ${pager.next?.href}" data-toggle="tooltip" data-placement="top" data-delay="750" title="Next Page">
                     <span class="glyphicon glyphicon-forward"></span>
-                </button>
+                </a>
             </li>
             <li>
-                <button class="btn btn-default" th:href="'/?url=' + ${pager.last.href}" data-toggle="tooltip" data-placement="top" data-delay="750" title="Last Page" th:disabled="${pager.last == null}">
+                <a class="btn" th:classappend="${pager.last != null} ? 'btn-default' : 'disabled'" th:href="'/?url=' + ${pager.last?.href}" data-toggle="tooltip" data-placement="top" data-delay="750" title="Last Page">
                     <span class="glyphicon glyphicon glyphicon-fast-forward"></span>
-                </button>
+                </a>
             </li>
         </ul>
     </div>
@@ -68,21 +68,15 @@
                 <td>
                     <a class="btn btn-default"
                        role="button"
+                       target="_blank"
                        data-toggle="tooltip"
                        data-placement="right"
                        th:title="${link.relDesc}"
                        th:href="${link.relHref}"
-                       th:if="${!#strings.isEmpty(link.relHref)}">
-                        <span class="glyphicon glyphicon-book" ></span>&nbsp;
+                       th:disabled="${#strings.isEmpty(link.relHref)}">
+                        <span class="glyphicon glyphicon-new-window"></span>&nbsp;
                         <span th:text="${link.rel}">rel</span>
                     </a>
-                    <button type="button"
-                            class="btn btn-default"
-                            disabled="disabled"
-                            th:if="${#strings.isEmpty(link.relHref)}">
-                        <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
-                        <span th:text="${link.rel}">rel</span>
-                    </button>
                 </td>
                 <td>
                     <span th:text="${link.title}"></span>
@@ -94,12 +88,13 @@
                     <span th:text="${link.type}"></span>&nbsp;
                     <a class="btn btn-default"
                        role="button"
+                       target="_blank"
                        data-toggle="tooltip"
                        data-placement="bottom"
                        th:title="${link.profile}"
                        th:href="${link.profile}"
                        th:if="${!#strings.isEmpty(link.profile)}">
-                        <span class="glyphicon glyphicon-book" ></span>
+                        <span class="glyphicon glyphicon-new-window" ></span>&nbsp;<span>Profile</span>
                     </a>&nbsp;
                 </td>
                 <td>
