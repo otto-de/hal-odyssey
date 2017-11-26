@@ -52,7 +52,7 @@
                 <th>Title</th>
                 <th>Name</th>
                 <th>Type</th>
-                <th>Href</th>
+                <th>Link</th>
             </tr>
             </thead>
             <tbody>
@@ -110,13 +110,19 @@
                     <form action="/"
                           method="POST"
                           th:if="${link.templated}">
+                        <input hidden="hidden" name="url" th:value="${link.href}" />
+                        <div class="form-group row">
+                            <label for="url-self" class="col-md-2 col-form-label">href:</label>
+                            <div class="col-md-10">
+                                <span id="url-self" th:text="${link.href}">href</span>
+                            </div>
+                        </div>
                         <div class="form-group row" th:each="hrefParam : ${link.hrefParams}">
                             <label th:for="${hrefParam.key}" class="col-md-2 col-form-label" th:text="${hrefParam.key} + ':'">param</label>
                             <div class="col-md-10">
                                 <input  class="form-control-sm" type="text" th:required="${hrefParam.required}" th:name="${hrefParam.key}"></input>
                             </div>
                         </div>
-                        <input hidden="hidden" name="url" th:value="${link.href}" />
                         <button type="submit"
                                 class="btn btn-primary"
                                 data-toggle="tooltip"

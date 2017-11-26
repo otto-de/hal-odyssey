@@ -69,18 +69,18 @@ public class UiController {
                     "           \"href\":\"http://localhost:8080/example?page=42\"" +
                     "       }," +
                     "       \"http://localhost:8080/rels/foo\": [" +
-                    "           {\"href\":\"http://localhost:8080/foo/42\", \"title\":\"Foo 42\", \"type\":\"application/hal+json\", \"profile\":\"http://localhost:8080/profiles/test\"}," +
-                    "           {\"href\":\"http://localhost:8080/foo/43\", \"title\":\"Foo 43\", \"type\":\"application/hal+json\"}," +
-                    "           {\"href\":\"http://localhost:8080/foo/44\", \"title\":\"Foo 44\", \"type\":\"application/hal+json\"}," +
-                    "           {\"href\":\"http://localhost:8080/foo/45\", \"title\":\"Foo 45\", \"type\":\"application/hal+json\"}," +
-                    "           {\"href\":\"http://localhost:8080/foo/46\", \"title\":\"Foo 46\", \"type\":\"application/hal+json\"}" +
+                    "           {\"href\":\"http://localhost:8080/example/foo/42\", \"title\":\"Foo 42\", \"type\":\"application/hal+json\", \"profile\":\"http://localhost:8080/profiles/test\"}," +
+                    "           {\"href\":\"http://localhost:8080/example/foo/43\", \"title\":\"Foo 43\", \"type\":\"application/hal+json\"}," +
+                    "           {\"href\":\"http://localhost:8080/example/foo/44\", \"title\":\"Foo 44\", \"type\":\"application/hal+json\"}," +
+                    "           {\"href\":\"http://localhost:8080/example/foo/45\", \"title\":\"Foo 45\", \"type\":\"application/hal+json\"}," +
+                    "           {\"href\":\"http://localhost:8080/example/foo/46\", \"title\":\"Foo 46\", \"type\":\"application/hal+json\"}" +
                     "       ]," +
                     "       \"http://localhost:8080/link-relations/bar\": [" +
-                    "           {\"href\":\"http://localhost:8080/bar/42\", \"title\":\"Bar 42\", \"type\":\"application/hal+json\", \"profile\":\"http://localhost:8080/profiles/test\"}," +
-                    "           {\"href\":\"http://localhost:8080/bar/43\", \"title\":\"Bar 43\", \"type\":\"application/hal+json\"}," +
-                    "           {\"href\":\"http://localhost:8080/bar{/id}{?x}{&y}\", \"templated\": true, \"title\":\"Bar 44\", \"type\":\"application/hal+json\"}," +
-                    "           {\"href\":\"http://localhost:8080/bar/45\", \"title\":\"Bar 45\", \"type\":\"application/hal+json\"}," +
-                    "           {\"href\":\"http://localhost:8080/bar/46\", \"title\":\"Bar 46\", \"type\":\"application/hal+json\"}" +
+                    "           {\"href\":\"http://localhost:8080/example/bar/42\", \"title\":\"Bar 42\", \"type\":\"application/hal+json\", \"profile\":\"http://localhost:8080/profiles/test\"}," +
+                    "           {\"href\":\"http://localhost:8080/example/bar/43\", \"title\":\"Bar 43\", \"type\":\"application/hal+json\"}," +
+                    "           {\"href\":\"http://localhost:8080/example/bar{/id}{?x}{&y}\", \"templated\": true, \"title\":\"Bar 44\", \"type\":\"application/hal+json\"}," +
+                    "           {\"href\":\"http://localhost:8080/example/bar/45\", \"title\":\"Bar 45\", \"type\":\"application/hal+json\"}," +
+                    "           {\"href\":\"http://localhost:8080/example/bar/46\", \"title\":\"Bar 46\", \"type\":\"application/hal+json\"}" +
                     "       ]" +
                     "   }" +
                     "}";
