@@ -69,6 +69,9 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Custom Attributes</h3>
+                    <ul class="list-inline panel-actions">
+                        <li><a href="#" id="panel-attr-fullscreen" role="button" title="Toggle fullscreen"><i class="glyphicon glyphicon-resize-full"></i></a></li>
+                    </ul>
                 </div>
                 <div class="panel-body">
                     <div th:include="fragments/browserFragments :: attrTable(${customAttributes})"></div>
@@ -76,12 +79,21 @@
             </div>
         </div>
         <div class="col-lg-9">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Links</h3>
-                </div>
-                <div class="panel-body">
-                    <div th:include="fragments/browserFragments :: linkTable(${links})"></div>
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a id="collapse-links-title" data-toggle="collapse" href="#collapse-links"><span class="glyphicon glyphicon-triangle-bottom"></span> Links</a>
+                        </h3>
+                        <ul class="list-inline panel-actions">
+                            <li><a href="#" id="panel-links-fullscreen" role="button" title="Toggle fullscreen"><i class="glyphicon glyphicon-resize-full"></i></a></li>
+                        </ul>
+                    </div>
+                    <div id="collapse-links" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <div th:include="fragments/browserFragments :: linkTable(${links})"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -100,6 +112,30 @@
     $(document).ready(function(){
         $('a[data-toggle=tooltip]').tooltip();
         $('button[data-toggle=tooltip]').tooltip();
+    });
+</script>
+<script>
+    //Toggle fullscreen
+    var toggleFullScreen = function (e) {
+        e.preventDefault();
+        var $this = $(this);
+
+        if ($this.children('i').hasClass('glyphicon-resize-full'))
+        {
+            $this.children('i').removeClass('glyphicon-resize-full');
+            $this.children('i').addClass('glyphicon-resize-small');
+        }
+        else if ($this.children('i').hasClass('glyphicon-resize-small'))
+        {
+            $this.children('i').removeClass('glyphicon-resize-small');
+            $this.children('i').addClass('glyphicon-resize-full');
+        }
+        $(this).closest('.panel').toggleClass('panel-fullscreen');
+        $(this).closest('.panel').collapse("show");
+    };
+    $(document).ready(function () {
+        $("#panel-attr-fullscreen").click(toggleFullScreen);
+        $("#panel-links-fullscreen").click(toggleFullScreen);
     });
 </script>
 </body>
