@@ -49,7 +49,7 @@ public class UiController {
                     "   \"barfoo\":[{\"one\":\"eins\"},{\"two\":\"zwei\"}]," +
                     "   \"_links\":{" +
                     "       \"curies\": [" +
-                    "           {\"name\":\"example\", \"href\":\"http://localhost:8080/rels/{rel}\", \"templated\": true}" +
+                    "           {\"name\":\"example\", \"href\":\"http://example.com/rels/{rel}\", \"templated\": true}" +
                     "       ]," +
                     "       \"self\": {" +
                     "           \"href\":\"" + link.getHref() + "\", \"title\":\"Some Resource\", \"type\":\"application/hal+json\", \"profile\":\"http://example.com/profiles/example\"" +
@@ -66,14 +66,14 @@ public class UiController {
                     "       \"last\": {" +
                     "           \"href\":\"http://localhost:8080/example?page=42\"" +
                     "       }," +
-                    "       \"http://localhost:8080/rels/foo\": [" +
-                    "           {\"href\":\"http://localhost:8080/example/foo/42\", \"title\":\"Foo 42\", \"type\":\"application/hal+json\", \"profile\":\"http://localhost:8080/profiles/test\"}," +
+                    "       \"example:foo\": [" +
+                    "           {\"href\":\"http://localhost:8080/example/foo/42\", \"title\":\"Foo 42\", \"type\":\"application/hal+json\", \"profile\":\"http://localhost:8080/profiles/test/test/test;version=1\"}," +
                     "           {\"href\":\"http://localhost:8080/example/foo/43\", \"title\":\"Foo 43\", \"type\":\"application/hal+json\"}," +
                     "           {\"href\":\"http://localhost:8080/example/foo/44\", \"title\":\"Foo 44\", \"type\":\"application/hal+json\"}," +
                     "           {\"href\":\"http://localhost:8080/example/foo/45\", \"title\":\"Foo 45\", \"type\":\"application/hal+json\"}," +
                     "           {\"href\":\"http://localhost:8080/example/foo/46\", \"title\":\"Foo 46\", \"type\":\"application/hal+json\"}" +
                     "       ]," +
-                    "       \"http://localhost:8080/link-relations/bar\": [" +
+                    "       \"bar\": [" +
                     "           {\"href\":\"http://localhost:8080/example/bar/42\", \"title\":\"Bar 42\", \"type\":\"application/hal+json\", \"profile\":\"http://localhost:8080/profiles/test\"}," +
                     "           {\"href\":\"http://localhost:8080/example/bar/43\", \"title\":\"Bar 43\", \"type\":\"application/hal+json\"}," +
                     "           {\"href\":\"http://localhost:8080/example/bar{/id}{?x}{&y}\", \"templated\": true, \"title\":\"Bar 44\", \"type\":\"application/hal+json\"}," +

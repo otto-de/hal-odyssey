@@ -48,11 +48,10 @@
         <table class="table table-hover">
             <thead>
             <tr>
-                <th>Rel</th>
-                <th>Title</th>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Link</th>
+                <th class="col-xs-2">Title</th>
+                <th class="col-xs-1">Name</th>
+                <th class="col-xs-3">Type</th>
+                <th class="col-xs-6">Link</th>
             </tr>
             </thead>
             <tbody>
@@ -66,36 +65,30 @@
     <div th:fragment="linkRow(link)">
             <tr>
                 <td>
-                    <a class="btn btn-default"
-                       role="button"
-                       target="_blank"
-                       data-toggle="tooltip"
-                       data-placement="right"
-                       th:title="${link.relDesc}"
-                       th:href="${link.relHref}"
-                       th:disabled="${#strings.isEmpty(link.relHref)}">
-                        <span class="glyphicon glyphicon-new-window"></span>&nbsp;
-                        <span th:text="${link.rel}">rel</span>
-                    </a>
-                </td>
-                <td>
                     <span th:text="${link.title}"></span>
                 </td>
                 <td>
                     <span th:text="${link.name}"></span>
                 </td>
                 <td>
-                    <span th:text="${link.type}"></span>&nbsp;
-                    <a class="btn btn-default"
-                       role="button"
-                       target="_blank"
-                       data-toggle="tooltip"
-                       data-placement="bottom"
-                       th:title="${link.profile}"
-                       th:href="${link.profile}"
-                       th:if="${!#strings.isEmpty(link.profile)}">
-                        <span class="glyphicon glyphicon-new-window" ></span>&nbsp;<span>Profile</span>
-                    </a>&nbsp;
+                    <span class="formgroup row">
+                        <label th:for="'link-type-'+${link.id}" class="col-form-label">Mediatype:</label>
+                        <div >
+                            <span th:id="'link-type-'+${link.id}" class="form-control-md" th:text="${link.type}">href</span>
+                        </div>
+                    </span>
+                    <span class="formgroup row" th:if="${!#strings.isEmpty(link.profile)}">
+                        <label th:for="'link-profile-'+${link.id}" class="col-form-label">Profile:</label>
+                        <div>
+                            <a role="link"
+                               target="_blank"
+                               class="form-control-md"
+                               th:id="'link-profile-'+${link.id}"
+                               th:href="${link.profile}">
+                                <span class="glyphicon glyphicon-new-window" th:text="'&nbsp;' + ${link.profile}">Profile</span>
+                            </a>
+                        </div>
+                    </span>
                 </td>
                 <td>
                     <a class="btn btn-primary"
@@ -112,9 +105,9 @@
                           th:if="${link.templated}">
                         <input hidden="hidden" name="url" th:value="${link.href}" />
                         <div class="form-group row">
-                            <label for="url-self" class="col-md-2 col-form-label">href:</label>
+                            <label for="link-href" class="col-md-2 col-form-label">href:</label>
                             <div class="col-md-10">
-                                <span id="url-self" th:text="${link.href}">href</span>
+                                <span id="link-href" th:text="${link.href}">href</span>
                             </div>
                         </div>
                         <div class="form-group row" th:each="hrefParam : ${link.hrefParams}">
