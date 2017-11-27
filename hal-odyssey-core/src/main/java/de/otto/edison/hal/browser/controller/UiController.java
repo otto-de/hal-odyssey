@@ -107,7 +107,6 @@ public class UiController {
                         .entrySet()
                         .stream()
                         .collect(toMap(Entry::getKey, e -> prettyPrint(e.getValue()))));
-                put("links", toLinkModel(hal));
                 put("rels", toLinkTabModel(hal));
                 put("pager", toPagerModel(hal));
             }});
@@ -147,17 +146,6 @@ public class UiController {
                     }
                 })
                 .filter(Objects::nonNull)
-                .collect(toList());
-    }
-
-    private List<LinkModel> toLinkModel(final HalRepresentation hal) {
-        final List<Link> curies = hal.getLinks().getLinksBy("curies");
-        return hal
-                .getLinks()
-                .stream()
-                .filter(NON_PAGING_LINK_PREDICATE)
-                .filter(NON_SELF_LINK_PREDICATE)
-                .map(link -> new LinkModel(link, matchingCuriTemplateFor(curies, link.getRel())))
                 .collect(toList());
     }
 
