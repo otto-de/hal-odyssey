@@ -18,10 +18,8 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -110,6 +108,7 @@ public class UiController {
                         .stream()
                         .collect(toMap(Entry::getKey, e -> prettyPrint(e.getValue()))));
                 put("links", toLinkModel(hal));
+                put("rels", toLinkTabModel(hal));
                 put("pager", toPagerModel(hal));
             }});
         } else {
@@ -118,6 +117,7 @@ public class UiController {
                 put("currentUrl", "http://");
                 put("customAttributes", emptyMap());
                 put("links", emptyList());
+                put("rels", emptyList());
                 put("pager", UNAVAILABLE);
             }});
         }
@@ -126,6 +126,7 @@ public class UiController {
     private List<LinkTabModel> toLinkTabModel(final HalRepresentation hal) {
         final List<Link> curies = hal.getLinks().getLinksBy("curies");
         final List<String> sortedRels = hal.getLinks().getRels().stream().sorted().collect(toList());
+        final AtomicInteger index = new AtomicInteger(0);
         return sortedRels
                 .stream()
                 .map(rel -> {
@@ -134,11 +135,18 @@ public class UiController {
                             .getLinks()
                             .getLinksBy(rel)
                             .stream()
+                            .filter(NON_PAGING_LINK_PREDICATE)
+                            .filter(NON_SELF_LINK_PREDICATE)
                             .map(link->new LinkModel(link,curiTemplate))
                             .collect(Collectors.toList());
-                    final LinkModel first = relLinks.get(0);
-                    return new LinkTabModel(first.rel, first.relHref, first.relDesc, relLinks);
+                    if (relLinks.isEmpty()) {
+                        return null;
+                    } else {
+                        final LinkModel first = relLinks.get(0);
+                        return new LinkTabModel(index.getAndIncrement(), first.rel, first.relHref, first.relDesc, relLinks);
+                    }
                 })
+                .filter(Objects::nonNull)
                 .collect(toList());
     }
 
