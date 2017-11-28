@@ -7,10 +7,7 @@ import de.otto.edison.hal.CuriTemplate;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Link;
 import de.otto.edison.hal.odyssey.service.HttpClient;
-import de.otto.edison.hal.odyssey.ui.LinkModel;
-import de.otto.edison.hal.odyssey.ui.LinkRelationService;
-import de.otto.edison.hal.odyssey.ui.LinkTabModel;
-import de.otto.edison.hal.odyssey.ui.PagerModel;
+import de.otto.edison.hal.odyssey.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -118,14 +115,15 @@ public class OdysseyController {
 
     private LinkTabModel toCuriesModel(final HalRepresentation hal) {
         final List<Link> curies = hal.getLinks().getLinksBy("curies");
+        final LinkRelation curiesRel = linkRelationService.getLinkRelation("curies");
         if (!curies.isEmpty()) {
             final List<LinkModel> curiLinks = curies
                     .stream()
                     .map(LinkModel::new)
                     .collect(toList());
-            return new LinkTabModel(linkRelationService.getLinkRelation("curies"), curiLinks);
+            return new LinkTabModel(curiesRel, curiLinks);
         } else {
-            return null;
+            return new LinkTabModel(curiesRel, emptyList());
         }
     }
 

@@ -83,13 +83,13 @@ public class HttpClient {
 
     private HttpHeaders headersFor(final String type) {
         final HttpHeaders headers = new HttpHeaders();
-        if (!type.isEmpty()) {
-            headers.setAccept(singletonList(valueOf(type)));
-        } else {
+        if (type == null || type.isEmpty()) {
             headers.setAccept(asList(
                     APPLICATION_HAL_JSON,
                     APPLICATION_JSON)
             );
+        } else {
+            headers.setAccept(singletonList(valueOf(type)));
         }
         return headers;
     }
