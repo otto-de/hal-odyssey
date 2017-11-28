@@ -1,19 +1,20 @@
 package de.otto.edison.hal.odyssey.service;
 
-import de.otto.edison.hal.Link;
-import de.otto.edison.hal.traverson.LinkResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.net.URI;
-
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.valueOf;
 
 @Service
-public class OdysseyLinkResolver implements LinkResolver {
+public class HttpClient {
 
     private static final String EXAMPLE_JSON = "{" +
             "   \"foo\":\"bar\"," +
@@ -56,27 +57,38 @@ public class OdysseyLinkResolver implements LinkResolver {
             "   }" +
             "}";
 
+    private static final MediaType APPLICATION_HAL_JSON = valueOf("application/hal+json");
     private final RestTemplate restTemplate;
 
     @Autowired
-    OdysseyLinkResolver(final RestTemplateBuilder restTemplateBuilder) {
+    HttpClient(final RestTemplateBuilder restTemplateBuilder) {
         restTemplate = restTemplateBuilder.build();
     }
 
-    /**
-     * Resolves an absolute link and returns the linked resource representation as a String.
-     *
-     * @param link the link of the resource
-     * @return String containing the {@code application/hal+json} representation of the resource
-     * @throws IOException if a low-level I/O problem (unexpected end-of-input, network error) occurs.
-     */
-    @Override
-    public String apply(Link link) throws IOException {
-        if (link.getHref().startsWith("http://localhost:8080/example")) {
-            return format(EXAMPLE_JSON, link.getHref());
+    public ResponseEntity<String> get(final String href,
+                                      final String type) {
+        if (href.startsWith("http://localhost:8080/example")) {
+            return new ResponseEntity<>(format(EXAMPLE_JSON, href), OK);
         } else {
-            return restTemplate.getForObject(URI.create(link.getHref()), String.class);
+            return restTemplate.exchange(
+                    href,
+                    HttpMethod.GET,
+                    new HttpEntity<String>(headersFor(type)),
+                    String.class);
         }
+    }
+
+    private HttpHeaders headersFor(final String type) {
+        final HttpHeaders headers = new HttpHeaders();
+        if (!type.isEmpty()) {
+            headers.setAccept(singletonList(valueOf(type)));
+        } else {
+            headers.setAccept(asList(
+                    APPLICATION_HAL_JSON,
+                    APPLICATION_JSON)
+            );
+        }
+        return headers;
     }
 
 }
