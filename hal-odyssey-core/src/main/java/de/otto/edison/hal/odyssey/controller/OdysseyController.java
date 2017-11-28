@@ -1,4 +1,4 @@
-package de.otto.edison.hal.browser.controller;
+package de.otto.edison.hal.odyssey.controller;
 
 import com.damnhandy.uri.template.UriTemplate;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -6,119 +6,113 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.otto.edison.hal.CuriTemplate;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Link;
-import de.otto.edison.hal.traverson.LinkResolver;
+import de.otto.edison.hal.odyssey.service.OdysseyLinkResolver;
+import de.otto.edison.hal.odyssey.ui.LinkModel;
+import de.otto.edison.hal.odyssey.ui.LinkRelationService;
+import de.otto.edison.hal.odyssey.ui.LinkTabModel;
+import de.otto.edison.hal.odyssey.ui.PagerModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.net.URI;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static com.damnhandy.uri.template.UriTemplate.fromTemplate;
 import static de.otto.edison.hal.CuriTemplate.matchingCuriTemplateFor;
-import static de.otto.edison.hal.browser.controller.PagerModel.UNAVAILABLE;
-import static de.otto.edison.hal.browser.controller.PagerModel.toPagerModel;
+import static de.otto.edison.hal.odyssey.ui.PagerModel.UNAVAILABLE;
+import static de.otto.edison.hal.odyssey.ui.PagerModel.toPagerModel;
 import static de.otto.edison.hal.traverson.Traverson.traverson;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
-import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 @Controller
-public class UiController {
+public class OdysseyController {
 
     private static final HalRepresentation EMPTY_HAL_REPRESENTATION = new HalRepresentation();
 
-    private RestTemplate restTemplate = new RestTemplate();
+    private final LinkRelationService linkRelationService;
+    private final OdysseyLinkResolver linkResolver;
 
-    private final LinkResolver FAKE_LINK_RESOLVER = link -> {
-        if (link.getHref().startsWith("http://localhost:8080/example")) {
-            return "{" +
-                    "   \"foo\":\"bar\"," +
-                    "   \"foobar\":{\"one\":\"eins\",\"two\":\"zwei\"}," +
-                    "   \"barfoo\":[{\"one\":\"eins\"},{\"two\":\"zwei\"}]," +
-                    "   \"_links\":{" +
-                    "       \"curies\": [" +
-                    "           {\"name\":\"example\", \"href\":\"http://example.com/rels/{rel}\", \"templated\": true}" +
-                    "       ]," +
-                    "       \"self\": {" +
-                    "           \"href\":\"" + link.getHref() + "\", \"title\":\"Some Resource\", \"type\":\"application/hal+json\", \"profile\":\"http://example.com/profiles/example\"" +
-                    "       }," +
-                    "       \"first\": {" +
-                    "           \"href\":\"http://localhost:8080/example?page=0\"" +
-                    "       }," +
-                    "       \"next\": {" +
-                    "           \"href\":\"http://localhost:8080/example?page=5\"" +
-                    "       }," +
-                    "       \"prev\": {" +
-                    "           \"href\":\"http://localhost:8080/example?page=3\"" +
-                    "       }," +
-                    "       \"last\": {" +
-                    "           \"href\":\"http://localhost:8080/example?page=42\"" +
-                    "       }," +
-                    "       \"example:foo\": [" +
-                    "           {\"href\":\"http://localhost:8080/example/foo/42\", \"title\":\"Foo 42\", \"type\":\"application/hal+json\", \"profile\":\"http://localhost:8080/profiles/test/test/test;version=1\"}," +
-                    "           {\"href\":\"http://localhost:8080/example/foo/43\", \"title\":\"Foo 43\", \"type\":\"application/hal+json\"}," +
-                    "           {\"href\":\"http://localhost:8080/example/foo/44\", \"title\":\"Foo 44\", \"type\":\"application/hal+json\"}," +
-                    "           {\"href\":\"http://localhost:8080/example/foo/45\", \"title\":\"Foo 45\", \"type\":\"application/hal+json\"}," +
-                    "           {\"href\":\"http://localhost:8080/example/foo/46\", \"title\":\"Foo 46\", \"type\":\"application/hal+json\"}" +
-                    "       ]," +
-                    "       \"bar\": [" +
-                    "           {\"href\":\"http://localhost:8080/example/bar/42\", \"title\":\"Bar 42\", \"type\":\"application/hal+json\", \"profile\":\"http://localhost:8080/profiles/test\"}," +
-                    "           {\"href\":\"http://localhost:8080/example/bar/43\", \"title\":\"Bar 43\", \"type\":\"application/hal+json\"}," +
-                    "           {\"href\":\"http://localhost:8080/example/bar{/id}{?x}{&y}\", \"templated\": true, \"title\":\"Bar 44\", \"type\":\"application/hal+json\"}," +
-                    "           {\"href\":\"http://localhost:8080/example/bar/45\", \"title\":\"Bar 45\", \"type\":\"application/hal+json\"}," +
-                    "           {\"href\":\"http://localhost:8080/example/bar/46\", \"title\":\"Bar 46\", \"type\":\"application/hal+json\"}" +
-                    "       ]" +
-                    "   }" +
-                    "}";
-        } else {
-            return restTemplate.getForObject(URI.create(link.getHref()), String.class);
-        }
-    };
+    @Autowired
+    public OdysseyController(final LinkRelationService linkRelationService,
+                             final OdysseyLinkResolver linkResolver) {
+        this.linkRelationService = linkRelationService;
+        this.linkResolver = linkResolver;
+    }
+
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
 
     private static final Predicate<? super Link> NON_PAGING_LINK_PREDICATE = (Link link) -> !PagerModel.PAGING_RELS.contains(link.getRel());
     private static final Predicate<? super Link> NON_SELF_LINK_PREDICATE = (Link link) -> !"self".equals(link.getRel());
+    private static final Predicate<? super Link> NON_CURIES_LINK_PREDICATE = (Link link) -> !"curies".equals(link.getRel());
 
     @GetMapping("/")
     public ModelAndView getResource(final @RequestParam(required = false) String url) throws IOException {
         if (url != null) {
-            final HalRepresentation hal = traverson(FAKE_LINK_RESOLVER)
+            final HalRepresentation hal = traverson(linkResolver)
                     .startWith(url)
                     .getResource()
                     .orElse(EMPTY_HAL_REPRESENTATION);
 
+            // TODO: class BrowserModel.from(hal)
             return new ModelAndView("browser", new HashMap<String,Object>() {{
                 put("currentUrl", url);
-                put("self", hal.getLinks().getLinkBy("self").map(self->new LinkModel(self, empty())).orElse(null));
+                put("self", hal
+                        .getLinks()
+                        .getLinkBy("self")
+                        .map(link -> {
+                            return new HashMap<String,Object>() {{
+                                put("link", new LinkModel(link));
+                                put("linkRelation", linkRelationService.getLinkRelation("self"));
+                            }};
+                        })
+                        .orElse(null));
                 put("customAttributes", hal.getAttributes()
                         .entrySet()
                         .stream()
                         .collect(toMap(Entry::getKey, e -> prettyPrint(e.getValue()))));
-                put("rels", toLinkTabModel(hal));
                 put("pager", toPagerModel(hal));
+                put("linkTabs", toLinkTabModel(hal));
+                put("curiTab", toCuriesModel(hal));
             }});
         } else {
+            // TODO: class BrowserModel.empty()
             return new ModelAndView("browser", new HashMap<String,Object>() {{
                 put("self", null);
                 put("currentUrl", "http://");
                 put("customAttributes", emptyMap());
-                put("links", emptyList());
-                put("rels", emptyList());
+                put("linkTabs", emptyList());
+                put("curiTab", null);
                 put("pager", UNAVAILABLE);
             }});
+        }
+    }
+
+    private LinkTabModel toCuriesModel(final HalRepresentation hal) {
+        final List<Link> curies = hal.getLinks().getLinksBy("curies");
+        if (!curies.isEmpty()) {
+            final List<LinkModel> curiLinks = curies
+                    .stream()
+                    .map(LinkModel::new)
+                    .collect(toList());
+            return new LinkTabModel(linkRelationService.getLinkRelation("curies"), curiLinks);
+        } else {
+            return null;
         }
     }
 
@@ -129,20 +123,20 @@ public class UiController {
         return sortedRels
                 .stream()
                 .map(rel -> {
-                    final Optional<CuriTemplate> curiTemplate = matchingCuriTemplateFor(curies, rel);
-                    final List<LinkModel> relLinks = hal
+                    final CuriTemplate curiTemplate = matchingCuriTemplateFor(curies, rel).orElse(null);
+                    final List<LinkModel> linksForRel = hal
                             .getLinks()
                             .getLinksBy(rel)
                             .stream()
                             .filter(NON_PAGING_LINK_PREDICATE)
                             .filter(NON_SELF_LINK_PREDICATE)
-                            .map(link->new LinkModel(link,curiTemplate))
+                            .filter(NON_CURIES_LINK_PREDICATE)
+                            .map(LinkModel::new)
                             .collect(Collectors.toList());
-                    if (relLinks.isEmpty()) {
+                    if (linksForRel.isEmpty()) {
                         return null;
                     } else {
-                        final LinkModel first = relLinks.get(0);
-                        return new LinkTabModel(index.getAndIncrement(), first.rel, first.relHref, first.relDesc, relLinks);
+                        return new LinkTabModel(index.getAndIncrement(), linkRelationService.getLinkRelation(rel, curiTemplate), linksForRel);
                     }
                 })
                 .filter(Objects::nonNull)

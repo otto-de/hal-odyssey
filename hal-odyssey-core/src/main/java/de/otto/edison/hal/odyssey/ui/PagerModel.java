@@ -1,4 +1,4 @@
-package de.otto.edison.hal.browser.controller;
+package de.otto.edison.hal.odyssey.ui;
 
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Link;
@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
-import static java.util.Optional.empty;
 
 public class PagerModel {
     public static final Set<String> PAGING_RELS = new HashSet<>(asList("first", "next", "prev", "previous", "last"));
@@ -53,12 +52,12 @@ public class PagerModel {
 
     private static LinkModel toLinkModel(final Link link, final Link... more) {
         if (link != null) {
-            return new LinkModel(link, empty());
+            return new LinkModel(link);
         }
         if (more != null && more.length > 0) {
             for (Link otherLink : more) {
                 if (otherLink != null) {
-                    return new LinkModel(otherLink, empty());
+                    return new LinkModel(otherLink);
                 }
             }
         }

@@ -1,4 +1,4 @@
-package de.otto.edison.hal.browser;
+package de.otto.edison.hal.odyssey;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class HalOdysseyServerTests {
+public class OdysseyServerTests {
 
 	@Test
 	public void contextLoads() {
