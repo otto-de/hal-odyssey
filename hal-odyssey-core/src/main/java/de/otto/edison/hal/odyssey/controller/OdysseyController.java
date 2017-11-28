@@ -94,7 +94,10 @@ public class OdysseyController {
                 put("pager", toPagerModel(hal));
                 put("linkTabs", toLinkTabModel(hal));
                 put("curiTab", toCuriesModel(hal));
-                put("response", responseBody);
+                put("response", new HashMap<String, Object>() {{
+                    put("body", responseBody);
+                    put("headers", response.getHeaders());
+                }});
             }});
         } else {
             // TODO: class BrowserModel.empty()
@@ -105,7 +108,10 @@ public class OdysseyController {
                 put("linkTabs", emptyList());
                 put("curiTab", new LinkTabModel(linkRelationService.getLinkRelation("curies"), emptyList()));
                 put("pager", UNAVAILABLE);
-                put("response", "");
+                put("response", new HashMap<String, Object>() {{
+                    put("body", "");
+                    put("headers", emptyMap());
+                }});
             }});
         }
     }

@@ -107,20 +107,20 @@
                             </ul>
                         </div>
                         <div class="panel-body">
-                            <div class="row" th:each="curi : ${curiTab. links}">
-                                <div class="col-xs-4">
-                                    <label th:for="'curi-name-' + curiTab.id">Name</label>
-                                    <div>
-                                        <span th:id="'curi-name-' + curiTab.id" th:text="${curi.name}">name</span>
-                                    </div>
-                                </div>
-                                <div class="col-xs-8">
-                                    <label th:for="'curi-title-' + curiTab.id">Href</label>
-                                    <div>
-                                        <span th:id="'curi-title-' + curiTab.id" th:text="${curi.href}">href</span>
-                                    </div>
-                                </div>
-                            </div>
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Href</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="curi: ${curiTab.links}">
+                                    <td th:text="${curi.name}">name</td>
+                                    <td th:text="${curi.href}">href</td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -226,6 +226,22 @@
                                     </ul>
                                 </div>
                                 <div class="panel-body">
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>Key</th>
+                                            <th>Value</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="header: ${response.headers.entrySet()}">
+                                            <td th:text="${header.key}">key</td>
+                                            <td>
+                                                <p th:each="value : ${header.value}" th:text="${value}"></p>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
 
@@ -243,7 +259,7 @@
                                     </ul>
                                 </div>
                                 <div class="panel-body">
-                                    <pre><code th:text="${response}"></code></pre>
+                                    <pre><code th:text="${response.body}"></code></pre>
                                 </div>
                             </div>
 

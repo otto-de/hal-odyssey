@@ -68,7 +68,10 @@ public class HttpClient {
     public ResponseEntity<String> get(final String href,
                                       final String type) {
         if (href.startsWith("http://localhost:8080/example")) {
-            return new ResponseEntity<>(format(EXAMPLE_JSON, href), OK);
+            HttpHeaders headers = new HttpHeaders();
+            headers.put(HttpHeaders.CONTENT_TYPE, asList("application/hal+json"));
+            headers.put(HttpHeaders.WARNING, asList("Example Content", "Served by Fake Service"));
+            return new ResponseEntity<>(format(EXAMPLE_JSON, href), headers, OK);
         } else {
             return restTemplate.exchange(
                     href,
