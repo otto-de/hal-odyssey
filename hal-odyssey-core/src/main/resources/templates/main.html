@@ -51,6 +51,62 @@
         </div>
     </div>
 
+    <!-- Embedded Panel -->
+    <div class="row" th:if="${embeddedTabs != null}">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Embedded
+                </h3>
+                <ul class="list-inline panel-actions">
+                    <li>
+                        <a id="panel-embedded-fullscreen" href="#" role="button" title="Toggle Fullscreen">
+                            <span class="glyphicon glyphicon-resize-full"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="panel-body">
+                <div class="panel-group" id="embedded-accordion" role="tablist" aria-multiselectable="true">
+                    <div class="panel panel-default"  th:each="embeddedTab : ${embeddedTabs}">
+                        <div class="panel-heading" role="tab" th:id="'collapse-embedded-heading-' + ${embeddedTab.id}">
+                            <h3 class="panel-title">
+                                <a role="button"
+                                   data-toggle="collapse"
+                                   data-parent="#embedded-accordion"
+                                   th:href="'#collapse-embedded-' + ${embeddedTab.id}"
+                                   aria-expanded="true"
+                                   th:attr="aria-controls='collapse-embedded-' + ${embeddedTab.id}">
+                                    <span class="glyphicon glyphicon-triangle-bottom"></span> <span th:text="${embeddedTab.linkRelation.rel}"></span>
+                                </a>
+                            </h3>
+                            <ul class="list-inline panel-actions" th:if="${!#strings.isEmpty(embeddedTab.linkRelation.href)}">
+                                <li>
+                                    <a th:href="${linkTab.linkRelation.href}"
+                                       role="button"
+                                       target="_blank"
+                                       data-toggle="tooltip"
+                                       data-placement="left"
+                                       th:title="${linkTab.linkRelation.description}">
+                                        <span class="glyphicon glyphicon-question-sign"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div th:id="'collapse-rel-' + ${embeddedTab.id}"
+                             class="panel-collapse collapse"
+                             th:classappend="${embeddedTab.index == 0} ? 'in' : ''"
+                             role="tabpanel" th:attr="aria-labelledby='collapse-embedded-heading-' + ${embeddedTab.id}">
+                            <div class="panel-body">
+                                <!-- body -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 <!-- /.container -->
 
@@ -88,6 +144,7 @@
     $(document).ready(function () {
         $("#panel-attr-fullscreen").click(toggleFullScreen);
         $("#panel-links-fullscreen").click(toggleFullScreen);
+        $("#panel-embedded-fullscreen").click(toggleFullScreen);
         $("#panel-response-fullscreen").click(function(e) {
             $("#collapse-http").collapse("show");
         });

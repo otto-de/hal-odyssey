@@ -54,6 +54,18 @@ public class HttpClient {
             "           {\"href\":\"http://localhost:8080/example/bar/45\", \"title\":\"Bar 45\", \"type\":\"application/hal+json\"}," +
             "           {\"href\":\"http://localhost:8080/example/bar/46\", \"title\":\"Bar 46\", \"type\":\"application/hal+json\"}" +
             "       ]" +
+            "   }," +
+            "   \"_embedded\":{" +
+            "       \"example:foo\": [" +
+            "           {" +
+            "               \"_links\" : {" +
+            "                   \"self\" : {\"href\":\"http://localhost:8080/example/foo/42\", \"title\":\"Foo 42\", \"type\":\"application/hal+json\", \"profile\":\"http://localhost:8080/profiles/test/test/test;version=1\"}" +
+            "               }," +
+            "               \"first\":\"1\"," +
+            "               \"second\":{\"one\":\"eins\",\"two\":\"zwei\"}," +
+            "               \"third\":[{\"one\":\"eins\"},{\"two\":\"zwei\"}]" +
+            "           }" +
+            "       ]" +
             "   }" +
             "}";
 

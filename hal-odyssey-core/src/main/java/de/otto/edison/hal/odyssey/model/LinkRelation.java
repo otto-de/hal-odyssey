@@ -1,4 +1,4 @@
-package de.otto.edison.hal.odyssey.ui;
+package de.otto.edison.hal.odyssey.model;
 
 public class LinkRelation {
     public final String rel;

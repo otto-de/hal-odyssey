@@ -1,8 +1,4 @@
-package de.otto.edison.hal.odyssey.ui;
-
-import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Link;
-import de.otto.edison.hal.Links;
+package de.otto.edison.hal.odyssey.model;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,7 +15,7 @@ public class PagerModel {
     public final LinkModel prev;
     public final LinkModel next;
 
-    private PagerModel(final String self,
+    public PagerModel(final String self,
                        final LinkModel first,
                        final LinkModel prev,
                        final LinkModel next,
@@ -39,28 +35,4 @@ public class PagerModel {
         }
     }
 
-    public static PagerModel toPagerModel(final HalRepresentation hal) {
-        final Links links = hal.getLinks();
-        return new PagerModel(
-                links.getLinkBy("self").map(Link::getHref).orElse(""),
-                toLinkModel(links.getLinkBy("first").orElse(null)),
-                toLinkModel(links.getLinkBy("prev").orElse(null), links.getLinkBy("previous").orElse(null)),
-                toLinkModel(links.getLinkBy("next").orElse(null)),
-                toLinkModel(links.getLinkBy("last").orElse(null))
-        );
-    }
-
-    private static LinkModel toLinkModel(final Link link, final Link... more) {
-        if (link != null) {
-            return new LinkModel(link);
-        }
-        if (more != null && more.length > 0) {
-            for (Link otherLink : more) {
-                if (otherLink != null) {
-                    return new LinkModel(otherLink);
-                }
-            }
-        }
-        return null;
-    }
 }

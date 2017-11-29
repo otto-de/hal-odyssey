@@ -1,4 +1,4 @@
-package de.otto.edison.hal.odyssey.ui;
+package de.otto.edison.hal.odyssey.model;
 
 import com.damnhandy.uri.template.UriTemplate;
 import com.damnhandy.uri.template.impl.Operator;

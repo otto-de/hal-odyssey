@@ -1,4 +1,4 @@
-package de.otto.edison.hal.odyssey.ui;
+package de.otto.edison.hal.odyssey.model;
 
 import de.otto.edison.hal.CuriTemplate;
 import org.springframework.stereotype.Service;
