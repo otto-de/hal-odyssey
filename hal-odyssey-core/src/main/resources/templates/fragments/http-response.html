@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<body>
+
+    <div th:fragment="http-response-panel(response)">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="collapse-http-heading">
+                <h3 class="panel-title">
+                    <a role="button"
+                       data-toggle="collapse"
+                       href="#collapse-http"
+                       aria-expanded="true"
+                       aria-controls="collapse-http">
+                        <span class="glyphicon glyphicon-triangle-bottom"></span> HTTP Response
+                    </a>
+                </h3>
+                <ul class="list-inline panel-actions">
+                    <li>
+                        <a th:id="panel-response-fullscreen" href="#" role="button" title="Toggle Fullscreen">
+                            <span class="glyphicon glyphicon-resize-full"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="panel-body panel-collapse collapse" id="collapse-http" aria-labelledby="collapse-http-heading">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div th:include="fragments/http-response :: http-headers-panel(${response})"></div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div th:include="fragments/http-response :: http-body-panel(${response})"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:fragment="http-headers-panel(response)">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Headers</h3>
+                <ul class="list-inline panel-actions">
+                    <li>
+                        <a th:id="panel-response-headers-fullscreen" href="#" role="button" title="Toggle Fullscreen">
+                            <span class="glyphicon glyphicon-resize-full"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="panel-body">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="header: ${response.headers.entrySet()}">
+                        <td th:text="${header.key}">key</td>
+                        <td>
+                            <p th:each="value : ${header.value}" th:text="${value}"></p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div th:fragment="http-body-panel(response)">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Body</h3>
+                <ul class="list-inline panel-actions">
+                    <li>
+                        <a th:id="panel-response-body-fullscreen" href="#" role="button" title="Toggle Fullscreen">
+                            <span class="glyphicon glyphicon-resize-full"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="panel-body">
+                <pre><code th:text="${response.body}"></code></pre>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments/head  :: head" />
+
+<body>
+
+<div th:replace="fragments/navigation  :: navigation" />
+
+<div class="container-fluid">
+    <!-- Open Panel -->
+    <div class="row">
+        <!-- Open Panel -->
+        <div class="col-xs-12">
+            <div th:include="fragments/open-resource :: open-resource-panel(${pager})"></div>
+        </div>
+    </div>
+
+    <!-- HTTP Response -->
+    <div class="row">
+        <div class="col-xs-12">
+            <div th:include="fragments/http-response :: http-response-panel(${response})"></div>
+        </div>
+    </div>
+
+    <!-- Self-, Attr- + Links Panel -->
+    <div class="row">
+        <div class="col-lg-4">
+            <!-- Self Panel -->
+            <div class="row" th:if="${self != null}">
+                <div class="col-xs-12">
+                    <div th:include="fragments/self :: self-panel(${self})"></div>
+                </div>
+            </div>
+            <!-- Curies Panel -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <div th:include="fragments/curies :: curies-panel(${curiTab})"></div>
+                </div>
+            </div>
+            <!-- Attr Panel -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <div th:include="fragments/attributes :: attributes-panel(${customAttributes})"></div>
+                </div>
+            </div>
+        </div>
+        <!-- Links Panel -->
+        <div class="col-lg-8">
+            <div th:include="fragments/links :: links-panel(${linkTabs})"></div>
+        </div>
+    </div>
+
+</div>
+<!-- /.container -->
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<script type="text/javascript"
+        src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript"
+        src="webjars/bootstrap/3.3.7/js/tooltip.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('a[data-toggle=tooltip]').tooltip();
+        $('button[data-toggle=tooltip]').tooltip();
+    });
+</script>
+<script>
+    //Toggle fullscreen
+    var toggleFullScreen = function (e) {
+        e.preventDefault();
+        var $this = $(this);
+
+        if ($this.children('span').hasClass('glyphicon-resize-full'))
+        {
+            $this.children('span').removeClass('glyphicon-resize-full');
+            $this.children('span').addClass('glyphicon-resize-small');
+        }
+        else if ($this.children('span').hasClass('glyphicon-resize-small'))
+        {
+            $this.children('span').removeClass('glyphicon-resize-small');
+            $this.children('span').addClass('glyphicon-resize-full');
+        }
+        $(this).closest('.panel').toggleClass('panel-fullscreen');
+    };
+    $(document).ready(function () {
+        $("#panel-attr-fullscreen").click(toggleFullScreen);
+        $("#panel-links-fullscreen").click(toggleFullScreen);
+        $("#panel-response-fullscreen").click(function(e) {
+            $("#collapse-http").collapse("show");
+        });
+        $("#panel-response-fullscreen").click(toggleFullScreen);
+        $("#panel-response-headers-fullscreen").click(toggleFullScreen);
+        $("#panel-response-body-fullscreen").click(toggleFullScreen);
+    });
+</script>
+</body>
+</html>

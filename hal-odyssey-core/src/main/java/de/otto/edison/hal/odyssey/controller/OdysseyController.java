@@ -74,7 +74,7 @@ public class OdysseyController {
                 hal = EMPTY_HAL_REPRESENTATION;
             }
             // TODO: class BrowserModel.from(hal)
-            return new ModelAndView("browser", new HashMap<String,Object>() {{
+            return new ModelAndView("main", new HashMap<String,Object>() {{
                 put("currentUrl", url);
                 put("self", hal
                         .getLinks()
@@ -98,7 +98,7 @@ public class OdysseyController {
             }});
         } else {
             // TODO: class BrowserModel.empty()
-            return new ModelAndView("browser", new HashMap<String,Object>() {{
+            return new ModelAndView("main", new HashMap<String,Object>() {{
                 put("self", null);
                 put("currentUrl", "http://");
                 put("customAttributes", emptyMap());

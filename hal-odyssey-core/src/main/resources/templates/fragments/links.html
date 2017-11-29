@@ -2,46 +2,60 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <body>
 
-    <div th:fragment="pager(pager)">
-        <ul class="pager" th:if="${pager.available}">
-            <li>
-                <a class="btn" th:classappend="${pager.first != null} ? 'btn-default' : 'disabled'" th:href="'/?url=' + ${pager.first?.href}" data-toggle="tooltip" data-placement="top" data-delay="750" title="First Page">
-                    <span class="glyphicon glyphicon-fast-backward"></span>
-                </a>
-            </li>
-            <li>
-                <a class="btn" th:classappend="${pager.prev != null} ? 'btn-default' : 'disabled'" th:href="'/?url=' + ${pager.prev?.href}" data-toggle="tooltip" data-placement="top" data-delay="750" title="Previous Page">
-                    <span class="glyphicon glyphicon-backward"></span>
-                </a>
-            </li>
-            <li>
-                <a class="btn" th:classappend="${pager.next != null} ? 'btn-default' : 'disabled'" th:href="'/?url=' + ${pager.next?.href}" data-toggle="tooltip" data-placement="top" data-delay="750" title="Next Page">
-                    <span class="glyphicon glyphicon-forward"></span>
-                </a>
-            </li>
-            <li>
-                <a class="btn" th:classappend="${pager.last != null} ? 'btn-default' : 'disabled'" th:href="'/?url=' + ${pager.last?.href}" data-toggle="tooltip" data-placement="top" data-delay="750" title="Last Page">
-                    <span class="glyphicon glyphicon glyphicon-fast-forward"></span>
-                </a>
-            </li>
-        </ul>
-    </div>
+    <div th:fragment="links-panel(linkTabs)">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Links
+                </h3>
+                <ul class="list-inline panel-actions">
+                    <li>
+                        <a id="panel-links-fullscreen" href="#" role="button" title="Toggle Fullscreen">
+                            <span class="glyphicon glyphicon-resize-full"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="panel-body">
+                <div class="panel-group" id="links-accordion" role="tablist" aria-multiselectable="true">
+                    <div class="panel panel-default"  th:each="linkTab : ${linkTabs}">
+                        <div class="panel-heading" role="tab" th:id="'collapse-rel-heading-' + ${linkTab.id}">
+                            <h3 class="panel-title">
+                                <a role="button"
+                                   data-toggle="collapse"
+                                   data-parent="#links-accordion"
+                                   th:href="'#collapse-rel-' + ${linkTab.id}"
+                                   aria-expanded="true"
+                                   th:attr="aria-controls='collapse-rel-' + ${linkTab.id}">
+                                    <span class="glyphicon glyphicon-triangle-bottom"></span> <span th:text="${linkTab.linkRelation.rel}"></span>
+                                </a>
+                            </h3>
+                            <ul class="list-inline panel-actions" th:if="${!#strings.isEmpty(linkTab.linkRelation.href)}">
+                                <li>
+                                    <a th:href="${linkTab.linkRelation.href}"
+                                       role="button"
+                                       target="_blank"
+                                       data-toggle="tooltip"
+                                       data-placement="left"
+                                       th:title="${linkTab.linkRelation.description}">
+                                        <span class="glyphicon glyphicon-question-sign"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div th:id="'collapse-rel-' + ${linkTab.id}"
+                             class="panel-collapse collapse"
+                             th:classappend="${linkTab.index == 0} ? 'in' : ''"
+                             role="tabpanel" th:attr="aria-labelledby='collapse-rel-heading-' + ${linkTab.id}">
+                            <div class="panel-body">
+                                <div th:include="fragments/links :: linkTable(${linkTab.links})"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-    <div th:fragment="attrTable(customAttributes)">
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th>Key</th>
-                <th>Value</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="attr : ${customAttributes.entrySet()}">
-                <td th:text="${attr.getKey()}">key...</td>
-                <td><pre><code th:text="${attr.getValue()}">some json</code></pre></td>
-            </tr>
-            </tbody>
-        </table>
+            </div>
+        </div>
     </div>
 
     <div th:fragment="linkTable(links)">
@@ -56,7 +70,7 @@
             </thead>
             <tbody>
             <tr th:each="link : ${links}">
-                <div th:include="fragments/browserFragments :: linkRow(${link})"></div>
+                <div th:include="fragments/links :: linkRow(${link})"></div>
             </tr>
             </tbody>
         </table>
@@ -73,7 +87,7 @@
                 <td>
                     <span class="formgroup row" th:if="${!#strings.isEmpty(link.type)}">
                         <label th:for="'link-type-'+${link.id}" class="col-form-label">Mediatype:</label>
-                        <div >
+                        <div>
                             <span th:id="'link-type-'+${link.id}" class="form-control-md" th:text="${link.type}">href</span>
                         </div>
                     </span>
@@ -85,7 +99,10 @@
                                class="form-control-md"
                                th:id="'link-profile-'+${link.id}"
                                th:href="${link.profile}">
-                                <span class="glyphicon glyphicon-new-window" th:text="'&nbsp;' + ${link.profile}">Profile</span>
+                                <span style="white-space:nowrap;">
+                                    <span class="glyphicon glyphicon-new-window"></span>
+                                    <span th:text="${link.profile}"></span>
+                                </span>
                             </a>
                         </div>
                     </span>

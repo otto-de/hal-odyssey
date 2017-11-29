@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<body>
+
+    <div th:fragment="curies-panel(curiTab)">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Curies</h3>
+                <ul class="list-inline panel-actions" th:if="${!#strings.isEmpty(curiTab.linkRelation.href)}">
+                    <li>
+                        <a th:href="${curiTab.linkRelation.href}"
+                           role="button"
+                           target="_blank"
+                           data-toggle="tooltip"
+                           data-placement="left"
+                           th:title="${curiTab.linkRelation.description}">
+                            <span class="glyphicon glyphicon-question-sign"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="panel-body">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Href</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="curi: ${curiTab.links}">
+                        <td th:text="${curi.name}">name</td>
+                        <td th:text="${curi.href}">href</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

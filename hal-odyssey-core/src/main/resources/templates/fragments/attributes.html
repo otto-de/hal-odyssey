@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<body>
+
+    <div th:fragment="attributes-panel(customAttributes)">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Custom Attributes</h3>
+                <ul class="list-inline panel-actions">
+                    <li>
+                        <a id="panel-attr-fullscreen" href="#" role="button" title="Toggle Fullscreen">
+                            <span class="glyphicon glyphicon-resize-full"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="panel-body">
+                <div th:include="fragments/attributes :: attrTable(${customAttributes})"></div>
+            </div>
+        </div>
+    </div>
+
+    <div th:fragment="attrTable(customAttributes)">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Key</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="attr : ${customAttributes.entrySet()}">
+                <td th:text="${attr.getKey()}">key...</td>
+                <td><pre><code th:text="${attr.getValue()}">some json</code></pre></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>
