@@ -41,14 +41,14 @@ public class HttpClient {
             "           \"href\":\"http://localhost:8080/example?page=42\"" +
             "       }," +
             "       \"example:foo\": [" +
-            "           {\"href\":\"http://localhost:8080/example/foo/42\", \"title\":\"Foo 42\", \"type\":\"application/hal+json\", \"profile\":\"http://localhost:8080/profiles/test/test/test;version=1\"}," +
-            "           {\"href\":\"http://localhost:8080/example/foo/43\", \"title\":\"Foo 43\", \"type\":\"application/hal+json\"}," +
-            "           {\"href\":\"http://localhost:8080/example/foo/44\", \"title\":\"Foo 44\", \"type\":\"application/hal+json\"}," +
-            "           {\"href\":\"http://localhost:8080/example/foo/45\", \"title\":\"Foo 45\", \"type\":\"application/hal+json\"}," +
-            "           {\"href\":\"http://localhost:8080/example/foo/46\", \"title\":\"Foo 46\", \"type\":\"application/hal+json\"}" +
+            "           {\"href\":\"http://localhost:8080/example/foo/42\", \"title\":\"Foo 42\", \"type\":\"application/hal+json\", \"profile\":\"http://localhost:8080/profiles/example;version=1\"}," +
+            "           {\"href\":\"http://localhost:8080/example/foo/43\", \"title\":\"Foo 43\", \"type\":\"application/hal+json\", \"profile\":\"http://localhost:8080/profiles/example;version=1\"}," +
+            "           {\"href\":\"http://localhost:8080/example/foo/44\", \"title\":\"Foo 44\", \"type\":\"application/hal+json\", \"profile\":\"http://localhost:8080/profiles/example;version=1\"}," +
+            "           {\"href\":\"http://localhost:8080/example/foo/45\", \"title\":\"Foo 45\", \"type\":\"application/hal+json\", \"profile\":\"http://localhost:8080/profiles/example;version=1\"}," +
+            "           {\"href\":\"http://localhost:8080/example/foo/46\", \"title\":\"Foo 46\", \"type\":\"application/hal+json\", \"profile\":\"http://localhost:8080/profiles/example;version=1\"}" +
             "       ]," +
             "       \"bar\": [" +
-            "           {\"href\":\"http://localhost:8080/example/bar/42\", \"title\":\"Bar 42\", \"type\":\"application/hal+json\", \"profile\":\"http://localhost:8080/profiles/test\"}," +
+            "           {\"href\":\"http://localhost:8080/example/bar/42\", \"title\":\"Bar 42\", \"type\":\"application/hal+json\"}," +
             "           {\"href\":\"http://localhost:8080/example/bar/43\", \"title\":\"Bar 43\", \"type\":\"application/hal+json\"}," +
             "           {\"href\":\"http://localhost:8080/example/bar{/id}{?x}{&y}\", \"templated\": true, \"title\":\"Bar 44\", \"type\":\"application/hal+json\"}," +
             "           {\"href\":\"http://localhost:8080/example/bar/45\", \"title\":\"Bar 45\", \"type\":\"application/hal+json\"}," +
@@ -59,11 +59,27 @@ public class HttpClient {
             "       \"example:foo\": [" +
             "           {" +
             "               \"_links\" : {" +
-            "                   \"self\" : {\"href\":\"http://localhost:8080/example/foo/42\", \"title\":\"Foo 42\", \"type\":\"application/hal+json\", \"profile\":\"http://localhost:8080/profiles/test/test/test;version=1\"}" +
+            "                   \"self\" : {\"href\":\"http://localhost:8080/example/foo/42\", \"type\":\"application/hal+json\", \"profile\":\"http://localhost:8080/profiles/example;version=1\"}" +
             "               }," +
-            "               \"first\":\"1\"," +
-            "               \"second\":{\"one\":\"eins\",\"two\":\"zwei\"}," +
-            "               \"third\":[{\"one\":\"eins\"},{\"two\":\"zwei\"}]" +
+            "               \"p1\":\"1\"," +
+            "               \"p2\":{\"one\":\"eins\",\"two\":\"zwei\"}," +
+            "               \"p3\":[{\"one\":\"eins\"},{\"two\":\"zwei\"}]" +
+            "           }," +
+            "           {" +
+            "               \"_links\" : {" +
+            "                   \"self\" : {\"href\":\"http://localhost:8080/example/foo/43\", \"title\":\"Foo 43\", \"type\":\"application/hal+json\", \"profile\":\"http://localhost:8080/profiles/example;version=1\"}" +
+            "               }," +
+            "               \"p1\":\"2\"," +
+            "               \"p2\":{\"one\":\"eins\",\"two\":\"zwei\"}," +
+            "               \"p3\":[{\"one\":\"eins\"},{\"two\":\"zwei\"}]" +
+            "           }," +
+            "           {" +
+            "               \"_links\" : {" +
+            "                   \"self\" : {\"href\":\"http://localhost:8080/example/foo/44\", \"title\":\"Foo 44\", \"type\":\"application/hal+json\", \"profile\":\"http://localhost:8080/profiles/example;version=1\"}" +
+            "               }," +
+            "               \"p1\":\"3\"," +
+            "               \"p2\":{\"one\":\"eins\",\"two\":\"zwei\"}," +
+            "               \"p3\":[{\"one\":\"eins\"},{\"two\":\"zwei\"}]" +
             "           }" +
             "       ]" +
             "   }" +

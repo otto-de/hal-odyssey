@@ -10,10 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -30,9 +27,13 @@ import static java.util.stream.Collectors.toMap;
 @Component
 public class ModelFactory {
 
-    private static final Predicate<? super Link> NON_PAGING_LINK_PREDICATE = (Link link) -> !PagerModel.PAGING_RELS.contains(link.getRel());
-    private static final Predicate<? super Link> NON_SELF_LINK_PREDICATE = (Link link) -> !"self".equals(link.getRel());
-    private static final Predicate<? super Link> NON_CURIES_LINK_PREDICATE = (Link link) -> !"curies".equals(link.getRel());
+    private static final Predicate<Link> NON_PAGING_LINK_PREDICATE = (Link link) -> !PagerModel.PAGING_RELS.contains(link.getRel());
+    private static final Predicate<Link> NON_SELF_LINK_PREDICATE = (Link link) -> !"self".equals(link.getRel());
+    private static final Predicate<Link> NON_CURIES_LINK_PREDICATE = (Link link) -> !"curies".equals(link.getRel());
+    private static final Predicate<Link> LINK_PREDICATE =
+            NON_CURIES_LINK_PREDICATE
+            .and(NON_PAGING_LINK_PREDICATE)
+            .and(NON_SELF_LINK_PREDICATE);
 
     private static final HalRepresentation EMPTY_HAL_REPRESENTATION = new HalRepresentation();
 
@@ -54,20 +55,45 @@ public class ModelFactory {
             put("customAttributes", emptyMap());
             put("linkTabs", emptyList());
             put("curiTab", emptyCuriesModel());
+            put("embeddedTabs", emptyList());
         }};
     }
 
     public Map<String, Object> toMainModel(final String url,
                                            final ResponseEntity<String> response) throws IOException {
         final HalRepresentation hal = toHalRepresentation(response);
+        final Map<String, Object> mainModel = toResourceModel(hal, 0, LINK_PREDICATE);
+        mainModel.put("currentUrl", url);
+        mainModel.put("response", toResponseModel(response));
+        return mainModel;
+    }
+
+    public List<EmbeddedTabModel> toEmbeddedModel(final HalRepresentation hal) {
+        final List<Link> curies = hal.getLinks().getLinksBy("curies");
+        final List<EmbeddedTabModel> embeddeds = new ArrayList<>();
+        int tabIndex = 0;
+        for (final String rel : hal.getEmbedded().getRels()) {
+            final CuriTemplate curiTemplate = matchingCuriTemplateFor(curies, rel).orElse(null);
+            final LinkRelation linkRelation = linkRelationService.getLinkRelation(rel, curiTemplate);
+            final AtomicInteger itemIndex = new AtomicInteger(0);
+            final List<Map<String, ?>> items = hal.getEmbedded().getItemsBy(rel)
+                    .stream()
+                    .map(item -> toResourceModel(item, itemIndex.getAndIncrement(), (link) -> true))
+                    .collect(toList());
+            embeddeds.add(new EmbeddedTabModel(tabIndex++, linkRelation, items));
+        }
+        return embeddeds;
+    }
+
+    private Map<String, Object> toResourceModel(final HalRepresentation hal, final int index, final Predicate<Link> linkPredicate) {
         return new HashMap<String,Object>() {{
-            put("currentUrl", url);
             put("pager", toPagerModel(hal));
-            put("response", toResponseModel(response));
             put("self", toSelfModel(hal));
             put("customAttributes", toAttributeModel(hal));
-            put("linkTabs", toLinkTabModel(hal));
+            put("linkTabs", toLinkTabModel(hal, linkPredicate));
             put("curiTab", toCuriesModel(hal));
+            put("embeddedTabs", toEmbeddedModel(hal));
+            put("index", index);
         }};
     }
 
@@ -133,7 +159,7 @@ public class ModelFactory {
         return null;
     }
 
-    private List<LinkTabModel> toLinkTabModel(final HalRepresentation hal) {
+    private List<LinkTabModel> toLinkTabModel(final HalRepresentation hal, final Predicate<Link> linkPredicate) {
         final List<Link> curies = hal.getLinks().getLinksBy("curies");
         final List<String> sortedRels = hal.getLinks().getRels().stream().sorted().collect(toList());
         final AtomicInteger index = new AtomicInteger(0);
@@ -145,9 +171,7 @@ public class ModelFactory {
                             .getLinks()
                             .getLinksBy(rel)
                             .stream()
-                            .filter(NON_PAGING_LINK_PREDICATE)
-                            .filter(NON_SELF_LINK_PREDICATE)
-                            .filter(NON_CURIES_LINK_PREDICATE)
+                            .filter(linkPredicate)
                             .map(LinkModel::new)
                             .collect(Collectors.toList());
                     if (linksForRel.isEmpty()) {

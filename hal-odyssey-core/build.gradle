@@ -31,7 +31,7 @@ repositories {
 
 dependencies {
 	compile("org.webjars:bootstrap:3.3.7")
-	compile("de.otto.edison:edison-hal:2.0.0-m1-SNAPSHOT")
+	compile("de.otto.edison:edison-hal:2.0.0-m1")
 	compile("org.springframework.boot:spring-boot-starter-thymeleaf:${springBootVersion}")
 	compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
 	runtime("org.springframework.boot:spring-boot-devtools:${springBootVersion}")
@@ -158,7 +158,7 @@ uploadArchives {
 			pom.project {
 				name 'hal-odyssey-core'
 				packaging 'jar'
-				description 'A library used to embed a HAL+JSON Parser into Spring Boot applications.'
+				description 'A library used to embed a HAL+JSON UI into Spring Boot applications.'
 				url 'https://github.com/otto-de/hal-odyssey'
 
 				scm {
