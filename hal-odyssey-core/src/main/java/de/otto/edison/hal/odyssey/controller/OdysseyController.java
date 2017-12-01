@@ -37,8 +37,7 @@ public class OdysseyController {
 
     @GetMapping("/")
     public ModelAndView getResource(final @RequestParam(required = false) String url,
-                                    final @RequestParam(required = false) String type,
-                                    final HttpServletRequest request) throws IOException {
+                                    final @RequestParam(required = false) String type) throws IOException {
         if (url != null) {
             final ResponseEntity<String> response = httpClient.get(url, type);
             return new ModelAndView("main", modelFactory.toMainModel(url, response));
