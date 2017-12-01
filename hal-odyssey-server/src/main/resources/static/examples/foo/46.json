@@ -1,0 +1,27 @@
+{
+  "_links": {
+    "self": {
+      "href": "http://localhost:8080/examples/foo46.json",
+      "type": "application/hal+json",
+      "profile": "http://localhost:8080/profiles/example;version=1"
+    },
+    "collection": {
+      "href": "http://localhost:8080/examples/third-page.json",
+      "type": "application/hal+json",
+      "profile": "http://localhost:8080/profiles/example;version=1"
+    }
+  },
+  "p1": "1",
+  "p2": {
+    "one": "eins",
+    "two": "zwei"
+  },
+  "p3": [
+    {
+      "one": "eins"
+    },
+    {
+      "two": "zwei"
+    }
+  ]
+}
