@@ -14,9 +14,11 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import static com.damnhandy.uri.template.UriTemplate.fromTemplate;
+import static java.net.URLEncoder.encode;
 import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.toMap;
 
@@ -35,7 +37,8 @@ public class OdysseyController {
 
     @GetMapping("/")
     public ModelAndView getResource(final @RequestParam(required = false) String url,
-                                    final @RequestParam(required = false) String type) throws IOException {
+                                    final @RequestParam(required = false) String type,
+                                    final HttpServletRequest request) throws IOException {
         if (url != null) {
             final ResponseEntity<String> response = httpClient.get(url, type);
             return new ModelAndView("main", modelFactory.toMainModel(url, response));
@@ -48,9 +51,13 @@ public class OdysseyController {
     public RedirectView fetchResource(final String url,
                                       final @RequestParam Map<String,Object> params,
                                       final HttpServletRequest request) {
-        final UriTemplate uriTemplate = fromTemplate(url).set(nonEmpty(params));
-        final String forwardTo = request.getRequestURL() + "?url=" + uriTemplate.expand();
-        return new RedirectView(forwardTo, true);
+        try {
+            final UriTemplate uriTemplate = fromTemplate(url).set(nonEmpty(params));
+            final String forwardTo = request.getRequestURL() + "?url=" + encode(uriTemplate.expand(), "UTF-8");
+            return new RedirectView(forwardTo, true);
+        } catch (final UnsupportedEncodingException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
     }
 
     private Map<String, Object> nonEmpty(final Map<String, Object> params) {
