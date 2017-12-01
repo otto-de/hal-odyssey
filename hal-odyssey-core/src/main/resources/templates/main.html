@@ -102,37 +102,9 @@
         src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript"
         src="webjars/bootstrap/3.3.7/js/tooltip.js"></script>
-<script type="text/javascript">
-    $(document).ready(function(){
-        $('a[data-toggle=tooltip]').tooltip();
-        $('button[data-toggle=tooltip]').tooltip();
-    });
-</script>
-<script>
-    //Toggle fullscreen
-    var toggleFullScreen = function (e) {
-        e.preventDefault();
-        var $this = $(this);
-
-        if ($this.children('span').hasClass('glyphicon-resize-full'))
-        {
-            $this.children('span').removeClass('glyphicon-resize-full');
-            $this.children('span').addClass('glyphicon-resize-small');
-        }
-        else if ($this.children('span').hasClass('glyphicon-resize-small'))
-        {
-            $this.children('span').removeClass('glyphicon-resize-small');
-            $this.children('span').addClass('glyphicon-resize-full');
-        }
-        var panel = $(this).closest('.panel');
-        panel.toggleClass('panel-fullscreen');
-        panel.children('.panel-collapse').collapse('show');
-    };
-    $(document).ready(function () {
-        $( ".toggle-fullscreen" ).each(function( index) {
-            $(this).click(toggleFullScreen)
-        });
-    });
-</script>
+<script type="text/javascript"
+        src="/js/init-tooltip.js"></script>
+<script type="text/javascript"
+        src="/js/init-fullscreen.js"></script>
 </body>
 </html>
