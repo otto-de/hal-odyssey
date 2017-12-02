@@ -5,6 +5,7 @@ import de.otto.edison.hal.odyssey.controller.OdysseyController;
 import de.otto.edison.hal.odyssey.model.LinkRelationService;
 import de.otto.edison.hal.odyssey.model.ModelFactory;
 import de.otto.edison.hal.odyssey.service.HttpClient;
+import de.otto.edison.hal.odyssey.service.SimpleHttpClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -32,10 +33,10 @@ public class HalOdysseyConfiguration {
         return new ModelFactory(linkRelationService, objectMapper);
     }
 
-    @ConditionalOnMissingBean(HttpClient.class)
+    @ConditionalOnMissingBean(SimpleHttpClient.class)
     @Bean
     public HttpClient httpClient(final RestTemplateBuilder restTemplateBuilder) {
-        return new HttpClient(restTemplateBuilder);
+        return new SimpleHttpClient(restTemplateBuilder);
     }
 
     @Bean

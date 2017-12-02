@@ -8,8 +8,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Collections;
-
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.mock;
@@ -18,7 +16,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.TEXT_HTML;
 
-public class HttpClientTest {
+public class SimpleHttpClientTest {
 
     @Test
     public void shouldGetResourceAsJson() {
@@ -26,7 +24,7 @@ public class HttpClientTest {
         final RestTemplate mockTemplate = mock(RestTemplate.class);
         final RestTemplateBuilder mockTemplateBuilder = mock(RestTemplateBuilder.class);
         when(mockTemplateBuilder.build()).thenReturn(mockTemplate);
-        final HttpClient httpClient = new HttpClient(mockTemplateBuilder);
+        final HttpClient httpClient = new SimpleHttpClient(mockTemplateBuilder);
 
         // when
         httpClient.get("http://example.com", null);
@@ -51,7 +49,7 @@ public class HttpClientTest {
         final RestTemplate mockTemplate = mock(RestTemplate.class);
         final RestTemplateBuilder mockTemplateBuilder = mock(RestTemplateBuilder.class);
         when(mockTemplateBuilder.build()).thenReturn(mockTemplate);
-        final HttpClient httpClient = new HttpClient(mockTemplateBuilder);
+        final HttpClient httpClient = new SimpleHttpClient(mockTemplateBuilder);
 
         // when
         httpClient.get("http://example.com", "text/html");
