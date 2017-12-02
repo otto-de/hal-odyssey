@@ -1,0 +1,63 @@
+buildscript {
+	ext {
+		springBootVersion = '1.5.8.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+		maven { url "https://repo.spring.io/snapshot" }
+		maven { url "https://repo.spring.io/milestone" }
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+plugins {
+	id 'org.springframework.boot' version "1.5.8.RELEASE"
+	id "io.spring.dependency-management" version "1.0.3.RELEASE"
+	id 'java'
+	id 'idea'
+	id 'eclipse'
+	id 'maven'
+	id 'signing'
+}
+
+group = 'de.otto.edison'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+	maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+	maven { url "https://repo.spring.io/snapshot" }
+	maven { url "https://repo.spring.io/milestone" }
+}
+
+
+dependencies {
+  compile project(":hal-odyssey-core")
+	compile('org.springframework.boot:spring-boot-starter-actuator')
+	compile('org.springframework.retry:spring-retry')
+	runtime('org.springframework.boot:spring-boot-devtools')
+	compileOnly('org.springframework.boot:spring-boot-configuration-processor')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+compileJava {
+	options.encoding = 'UTF-8'
+	options.compilerArgs << "-Xlint:all,-serial"
+}
+
+compileTestJava {
+	options.encoding = 'UTF-8'
+	options.compilerArgs << "-Xlint:all,-serial"
+}
+
+test {
+	println()
+	afterSuite { desc, result ->
+		if (!desc.parent) { // will match the outermost suite
+			println "Test Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+		}
+	}
+}
