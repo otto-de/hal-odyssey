@@ -85,13 +85,13 @@
                     <span th:text="${link.name}"></span>
                 </td>
                 <td>
-                    <span class="formgroup row" th:if="${!#strings.isEmpty(link.type)}">
-                        <label th:for="'link-type-'+${link.id}" class="col-form-label">Mediatype:</label>
+                    <span th:if="${!#strings.isEmpty(link.type)}">
+                        <label th:for="'link-type-'+${link.id}" class="col-form-label-md">Mediatype:</label>
                         <div>
                             <span th:id="'link-type-'+${link.id}" class="form-control-md" th:text="${link.type}">href</span>
                         </div>
                     </span>
-                    <span class="formgroup row" th:if="${!#strings.isEmpty(link.profile)}">
+                    <span th:if="${!#strings.isEmpty(link.profile)}">
                         <label th:for="'link-profile-'+${link.id}" class="col-form-label">Profile:</label>
                         <div>
                             <a role="link"
