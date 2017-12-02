@@ -28,7 +28,6 @@ public class OdysseyController {
     private final ModelFactory modelFactory;
     private final HttpClient httpClient;
 
-    @Autowired
     public OdysseyController(final ModelFactory modelFactory,
                              final HttpClient httpClient) {
         this.modelFactory = modelFactory;

@@ -65,4 +65,25 @@ public class LinkModel {
                 .collect(toList());
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LinkModel linkModel = (LinkModel) o;
+        return Objects.equals(href, linkModel.href) &&
+                Objects.equals(hrefParams, linkModel.hrefParams) &&
+                Objects.equals(templated, linkModel.templated) &&
+                Objects.equals(type, linkModel.type) &&
+                Objects.equals(hreflang, linkModel.hreflang) &&
+                Objects.equals(title, linkModel.title) &&
+                Objects.equals(name, linkModel.name) &&
+                Objects.equals(deprecation, linkModel.deprecation) &&
+                Objects.equals(profile, linkModel.profile) &&
+                Objects.equals(id, linkModel.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(href, hrefParams, templated, type, hreflang, title, name, deprecation, profile, id);
+    }
 }

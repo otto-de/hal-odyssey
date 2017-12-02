@@ -11,14 +11,12 @@ import static java.util.Collections.singletonList;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.valueOf;
 
-@Service
 public class HttpClient {
 
     private static final MediaType APPLICATION_HAL_JSON = valueOf("application/hal+json");
     private final RestTemplate restTemplate;
 
-    @Autowired
-    HttpClient(final RestTemplateBuilder restTemplateBuilder) {
+    public HttpClient(final RestTemplateBuilder restTemplateBuilder) {
         restTemplate = restTemplateBuilder.build();
     }
 

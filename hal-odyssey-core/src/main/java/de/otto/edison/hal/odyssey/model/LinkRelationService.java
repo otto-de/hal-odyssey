@@ -9,7 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Arrays.asList;
 
-@Service
 public class LinkRelationService {
 
     public static final String IANA_RELS_HREF = "https://www.iana.org/assignments/link-relations/link-relations.xhtml";
@@ -109,10 +108,6 @@ public class LinkRelationService {
         linkRelations.put(linkRelation.rel, linkRelation);
     }
 
-    public void unregister(final String rel) {
-        linkRelations.remove(rel);
-    }
-
     public LinkRelation getLinkRelation(final String rel) {
         return getLinkRelation(rel, null);
     }
@@ -134,7 +129,7 @@ public class LinkRelationService {
                 : rel;
 
         if (linkRelations.containsKey(curied)) {
-            return linkRelations.get(rel);
+            return linkRelations.get(curied);
         } if (linkRelations.containsKey(expanded)) {
             return linkRelations.get(expanded);
         } else{

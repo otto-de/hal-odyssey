@@ -1,6 +1,7 @@
 package de.otto.edison.hal.odyssey.model;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
@@ -35,4 +36,20 @@ public class PagerModel {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PagerModel that = (PagerModel) o;
+        return available == that.available &&
+                Objects.equals(first, that.first) &&
+                Objects.equals(last, that.last) &&
+                Objects.equals(prev, that.prev) &&
+                Objects.equals(next, that.next);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(available, first, last, prev, next);
+    }
 }

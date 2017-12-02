@@ -24,7 +24,6 @@ import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
-@Component
 public class ModelFactory {
 
     private static final Predicate<Link> NON_PAGING_LINK_PREDICATE = (Link link) -> !PagerModel.PAGING_RELS.contains(link.getRel());
@@ -85,7 +84,7 @@ public class ModelFactory {
         return embeddeds;
     }
 
-    private Map<String, Object> toResourceModel(final HalRepresentation hal, final int index, final Predicate<Link> linkPredicate) {
+    Map<String, Object> toResourceModel(final HalRepresentation hal, final int index, final Predicate<Link> linkPredicate) {
         return new HashMap<String,Object>() {{
             put("pager", toPagerModel(hal));
             put("self", toSelfModel(hal));
@@ -97,7 +96,7 @@ public class ModelFactory {
         }};
     }
 
-    private HalRepresentation toHalRepresentation(final ResponseEntity<String> response) throws IOException {
+    HalRepresentation toHalRepresentation(final ResponseEntity<String> response) throws IOException {
         final HalRepresentation hal;
         if (response.getStatusCode().is2xxSuccessful()) {
             hal = objectMapper.readValue(response.getBody(), HalRepresentation.class);
@@ -107,7 +106,7 @@ public class ModelFactory {
         return hal;
     }
 
-    private SelfModel toSelfModel(final HalRepresentation hal) {
+    SelfModel toSelfModel(final HalRepresentation hal) {
         return hal
                 .getLinks()
                 .getLinkBy("self")
@@ -115,12 +114,12 @@ public class ModelFactory {
                 .orElse(null);
     }
 
-    private LinkTabModel emptyCuriesModel() {
+    LinkTabModel emptyCuriesModel() {
         final LinkRelation curiesRel = linkRelationService.getLinkRelation("curies");
         return new LinkTabModel(curiesRel, emptyList());
     }
 
-    private LinkTabModel toCuriesModel(final HalRepresentation hal) {
+    LinkTabModel toCuriesModel(final HalRepresentation hal) {
         final List<Link> curies = hal != null ? hal.getLinks().getLinksBy("curies") : emptyList();
         final LinkRelation curiesRel = linkRelationService.getLinkRelation("curies");
         if (!curies.isEmpty()) {
@@ -134,7 +133,7 @@ public class ModelFactory {
         }
     }
 
-    private PagerModel toPagerModel(final HalRepresentation hal) {
+    PagerModel toPagerModel(final HalRepresentation hal) {
         final Links links = hal.getLinks();
         return new PagerModel(
                 links.getLinkBy("self").map(Link::getHref).orElse(""),
@@ -145,7 +144,7 @@ public class ModelFactory {
         );
     }
 
-    private LinkModel toLinkModel(final Link link, final Link... more) {
+    LinkModel toLinkModel(final Link link, final Link... more) {
         if (link != null) {
             return new LinkModel(link);
         }
@@ -159,7 +158,7 @@ public class ModelFactory {
         return null;
     }
 
-    private List<LinkTabModel> toLinkTabModel(final HalRepresentation hal, final Predicate<Link> linkPredicate) {
+    List<LinkTabModel> toLinkTabModel(final HalRepresentation hal, final Predicate<Link> linkPredicate) {
         final List<Link> curies = hal.getLinks().getLinksBy("curies");
         final List<String> sortedRels = hal.getLinks().getRels().stream().sorted().collect(toList());
         final AtomicInteger index = new AtomicInteger(0);
@@ -184,14 +183,14 @@ public class ModelFactory {
                 .collect(toList());
     }
 
-    private Map<String, String> toAttributeModel(final HalRepresentation hal) {
+    Map<String, String> toAttributeModel(final HalRepresentation hal) {
         return hal.getAttributes()
                 .entrySet()
                 .stream()
                 .collect(toMap(Map.Entry::getKey, e -> prettyPrintJson(e.getValue())));
     }
 
-    private ResponseModel toResponseModel(final ResponseEntity<String> response) throws IOException {
+    ResponseModel toResponseModel(final ResponseEntity<String> response) throws IOException {
         return new ResponseModel(response);
     }
 }

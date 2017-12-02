@@ -1,6 +1,7 @@
 package de.otto.edison.hal.odyssey.model;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class LinkTabModel {
@@ -20,4 +21,19 @@ public class LinkTabModel {
         this.index = index;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LinkTabModel that = (LinkTabModel) o;
+        return index == that.index &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(linkRelation, that.linkRelation) &&
+                Objects.equals(links, that.links);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, linkRelation, links, index);
+    }
 }
