@@ -7,7 +7,6 @@ import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.*;
@@ -65,6 +64,20 @@ public class ModelFactory {
         mainModel.put("currentUrl", url);
         mainModel.put("response", toResponseModel(response));
         return mainModel;
+    }
+
+    public Map<String, Object> toErrorModel(final String url,
+                                           final ResponseEntity<String> response) throws IOException {
+        return new HashMap<String,Object>() {{
+            put("currentUrl", url);
+            put("pager", UNAVAILABLE);
+            put("response", toResponseModel(response));
+            put("self", null);
+            put("customAttributes", emptyMap());
+            put("linkTabs", emptyList());
+            put("curiTab", emptyCuriesModel());
+            put("embeddedTabs", emptyList());
+        }};
     }
 
     public List<EmbeddedTabModel> toEmbeddedModel(final HalRepresentation hal) {
