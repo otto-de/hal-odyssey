@@ -41,10 +41,7 @@ public class OdysseyController {
     public ModelAndView getResource(final @RequestParam(required = false) String url,
                                     final @RequestParam(required = false) String type) throws IOException {
         if (url == null) {
-            /*
-            TODO: Eigene Seite mit Jumbotron für den Einstieg -> index.html
-             */
-            return new ModelAndView("main", modelFactory.emptyMainModel());
+            return new ModelAndView("index", modelFactory.emptyMainModel());
         }
         if (type != null && !type.startsWith("application/json") && !type.startsWith("application/hal+json")) {
             return new ModelAndView("redirect:" + url);

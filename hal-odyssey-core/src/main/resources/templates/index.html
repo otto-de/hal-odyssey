@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments/head  :: head" />
+
+<body>
+
+<div th:replace="fragments/navigation  :: navigation" />
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-xs-1">&nbsp;</div>
+        <div class="col-xs-10">
+            <div class="jumbotron">
+                <h1>Open Resource</h1>
+                <p>Enter the URL of some HAL+JSON resource:</p>
+                <form action="/" method="POST">
+                    <div class="form-group">
+                        <label for="url">URL</label>
+                        <input name="url" type="url" required="required" class="form-control" id="url" autofocus="autofocus" placeholder="http://"/>
+                    </div>
+                    <button type="submit"
+                            class="btn btn-primary">
+                        Submit <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="col-xs-1">&nbsp;</div>
+    </div>
+
+</div>
+<!-- /.container -->
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<script type="text/javascript"
+        src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript"
+        src="webjars/bootstrap/3.3.7/js/tooltip.js"></script>
+<script type="text/javascript"
+        src="/js/init-tooltip.js"></script>
+<script type="text/javascript"
+        src="/js/init-fullscreen.js"></script>
+</body>
+</html>
