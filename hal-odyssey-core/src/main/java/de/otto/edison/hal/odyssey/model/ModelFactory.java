@@ -7,8 +7,11 @@ import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.ResourceAccessException;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
@@ -67,17 +70,26 @@ public class ModelFactory {
     }
 
     public Map<String, Object> toErrorModel(final String url,
-                                           final ResponseEntity<String> response) throws IOException {
+                                            final HttpStatusCodeException e) throws IOException {
         return new HashMap<String,Object>() {{
             put("currentUrl", url);
-            put("pager", UNAVAILABLE);
-            put("response", toResponseModel(response));
-            put("self", null);
-            put("customAttributes", emptyMap());
-            put("linkTabs", emptyList());
-            put("curiTab", emptyCuriesModel());
-            put("embeddedTabs", emptyList());
+            put("error", e.getStatusCode().getReasonPhrase());
         }};
+    }
+
+    public Map<String, Object> toErrorModel(final String url,
+                                            final ResourceAccessException e) throws IOException {
+        if (e.getCause() instanceof UnknownHostException) {
+            return new HashMap<String, Object>() {{
+                put("currentUrl", url);
+                put("error", "Unknown Host: " + e.getCause().getMessage());
+            }};
+        } else {
+            return new HashMap<String, Object>() {{
+                put("currentUrl", url);
+                put("error", e.getMessage());
+            }};
+        }
     }
 
     public List<EmbeddedTabModel> toEmbeddedModel(final HalRepresentation hal) {

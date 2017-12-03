@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -61,13 +62,9 @@ public class OdysseyController {
                 return new ModelAndView("redirect:" + url);
             }
         } catch (final HttpStatusCodeException e) {
-            // TODO: Error Reponse mit JSON-Body - könnte man wieder anzeigen.
-            // TODO: Status-Codes anzeigen
-            // TODO: Hinweise auf Fehler ausgeben
-            // TODO: Eigene View für Errors
-            // TODO: Response-Tab aufklappen
-            //return new ModelAndView("error", modelFactory.toErrorModel(url, response));
-            throw e;
+            return new ModelAndView("index", modelFactory.toErrorModel(url, e));
+        } catch (final ResourceAccessException e) {
+            return new ModelAndView("index", modelFactory.toErrorModel(url, e));
         }
         throw new IllegalStateException("Unable to process '" + url + "'");
     }

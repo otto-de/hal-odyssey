@@ -117,7 +117,7 @@
                        th:if="${!link.templated}">
                         GET<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
                     </a>
-                    <form action="/"
+                    <form th:action="@{/}"
                           method="POST"
                           th:if="${link.templated}">
                         <input hidden="hidden" name="url" th:value="${link.href}" />

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<body>
+    <div th:fragment="footer">
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+        <script type="text/javascript"
+                th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+        <script type="text/javascript"
+                th:src="@{/webjars/bootstrap/3.3.7/js/tooltip.js}"></script>
+        <script type="text/javascript"
+                th:src="@{/js/init-tooltip.js}"></script>
+        <script type="text/javascript"
+                th:src="@{/js/init-fullscreen.js}"></script>
+
+    </div>
+</body>
+</html>
