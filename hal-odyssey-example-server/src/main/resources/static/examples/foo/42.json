@@ -3,12 +3,16 @@
     "self": {
       "href": "http://localhost:8080/examples/foo/42.json",
       "type": "application/hal+json",
-      "profile": "http://localhost:8080/profiles/example;version=1"
+      "profile": "http://localhost:8080/profiles/example.html"
+    },
+    "profile": {
+      "href": "http://localhost:8080/profiles/example.html",
+      "type": "text/html"
     },
     "collection": {
       "href": "http://localhost:8080/examples/first-page.json",
       "type": "application/hal+json",
-      "profile": "http://localhost:8080/profiles/example;version=1"
+      "profile": "http://localhost:8080/profiles/example.html"
     }
   },
   "p1": "1",

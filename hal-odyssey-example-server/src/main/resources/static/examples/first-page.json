@@ -29,7 +29,13 @@
       "href": "http://localhost:8080/examples/first-page.json",
       "title": "First page of some collection resource",
       "type": "application/hal+json",
-      "profile": "http://example.com/profiles/example"
+      "profile": "http://localhost:8080/profiles/example.html"
+    },
+    "profile": {
+      "href": "http://localhost:8080/profiles/example.html",
+      "name": "example",
+      "title": "Description of the example profile",
+      "type": "text/html"
     },
     "first": {
       "href": "http://localhost:8080/examples/first-page.json"
@@ -45,13 +51,13 @@
         "href": "http://localhost:8080/examples/foo/42.json",
         "title": "Foo 42",
         "type": "application/hal+json",
-        "profile": "http://localhost:8080/profiles/example;version=1"
+        "profile": "http://localhost:8080/profiles/example.html"
       },
       {
         "href": "http://localhost:8080/examples/foo/43.json",
         "title": "Foo 43",
         "type": "application/hal+json",
-        "profile": "http://localhost:8080/profiles/example;version=1"
+        "profile": "http://localhost:8080/profiles/example.html"
       }
     ],
     "bar": [
@@ -87,7 +93,7 @@
             "href": "http://localhost:8080/examples/foo/42.json",
             "title": "Foo 42",
             "type": "application/hal+json",
-            "profile": "http://localhost:8080/profiles/example;version=1"
+            "profile": "http://localhost:8080/profiles/example.html"
           }
         },
         "p1": "1",
@@ -110,7 +116,7 @@
             "href": "http://localhost:8080/examples/foo/43.json",
             "title": "Foo 43",
             "type": "application/hal+json",
-            "profile": "http://localhost:8080/profiles/example;version=1"
+            "profile": "http://localhost:8080/profiles/example.html"
           }
         },
         "p1": "2",
