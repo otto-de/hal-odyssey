@@ -15,37 +15,11 @@
   "_links": {
     "curies": [
       {
-        "name": "example",
-        "href": "http://example.com/rels/{rel}",
-        "templated": true
-      },
-      {
         "name": "otto",
-        "href": "http://spec.otto.de/rels/{rel}",
+        "href": "http://spec.otto.de/link-relations/{rel}",
         "templated": true
       }
     ],
-    "self": {
-      "href": "http://localhost:8080/examples/first-page.json",
-      "title": "First page of some collection resource",
-      "type": "application/hal+json",
-      "profile": "http://localhost:8080/profiles/example.html"
-    },
-    "profile": {
-      "href": "http://localhost:8080/profiles/example.html",
-      "name": "example",
-      "title": "Description of the example profile",
-      "type": "text/html"
-    },
-    "first": {
-      "href": "http://localhost:8080/examples/first-page.json"
-    },
-    "next": {
-      "href": "http://localhost:8080/examples/second-page.json"
-    },
-    "last": {
-      "href": "http://localhost:8080/examples/third-page.json"
-    },
     "example:foo": [
       {
         "href": "http://localhost:8080/examples/foo/42.json",
