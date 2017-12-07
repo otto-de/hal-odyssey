@@ -16,7 +16,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.TEXT_HTML;
 
-public class SimpleHttpClientTest {
+public class SimpleHalClientTest {
 
     @Test
     public void shouldGetResourceAsJson() {
@@ -24,10 +24,10 @@ public class SimpleHttpClientTest {
         final RestTemplate mockTemplate = mock(RestTemplate.class);
         final RestTemplateBuilder mockTemplateBuilder = mock(RestTemplateBuilder.class);
         when(mockTemplateBuilder.build()).thenReturn(mockTemplate);
-        final HttpClient httpClient = new SimpleHttpClient(mockTemplateBuilder);
+        final HalClient halClient = new SimpleHalClient(mockTemplateBuilder);
 
         // when
-        httpClient.get("http://example.com", null);
+        halClient.get("http://example.com", null);
 
         // then
         final HttpHeaders expectedHeaders = new HttpHeaders();
@@ -49,10 +49,10 @@ public class SimpleHttpClientTest {
         final RestTemplate mockTemplate = mock(RestTemplate.class);
         final RestTemplateBuilder mockTemplateBuilder = mock(RestTemplateBuilder.class);
         when(mockTemplateBuilder.build()).thenReturn(mockTemplate);
-        final HttpClient httpClient = new SimpleHttpClient(mockTemplateBuilder);
+        final HalClient halClient = new SimpleHalClient(mockTemplateBuilder);
 
         // when
-        httpClient.get("http://example.com", "text/html");
+        halClient.get("http://example.com", "text/html");
 
         // then
         final HttpHeaders expectedHeaders = new HttpHeaders();

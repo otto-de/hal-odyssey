@@ -7,9 +7,13 @@ buildscript {
 		maven { url "https://repo.spring.io/snapshot" }
 		maven { url "https://repo.spring.io/milestone" }
 	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
 }
 
 plugins {
+	id 'org.springframework.boot' version "1.5.8.RELEASE"
 	id "io.spring.dependency-management" version "1.0.3.RELEASE"
 	id 'java'
 	id 'idea'
@@ -34,8 +38,13 @@ dependencies {
 	compile("de.otto.edison:edison-hal:2.0.0-m1")
 	compile("org.springframework.boot:spring-boot-starter-thymeleaf:${springBootVersion}")
 	compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
+
+	compile("org.apache.httpcomponents:httpclient")
+
 	runtime("org.springframework.boot:spring-boot-devtools:${springBootVersion}")
+
 	compileOnly("org.springframework.boot:spring-boot-configuration-processor:${springBootVersion}")
+
 	testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
 }
 

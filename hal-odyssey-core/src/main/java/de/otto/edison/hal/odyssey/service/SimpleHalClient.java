@@ -9,16 +9,16 @@ import static java.util.Collections.singletonList;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.valueOf;
 
-public class SimpleHttpClient implements HttpClient {
+public class SimpleHalClient implements HalClient {
 
     private static final MediaType APPLICATION_HAL_JSON = valueOf("application/hal+json");
     private final RestTemplate restTemplate;
 
-    public SimpleHttpClient(final RestTemplateBuilder restTemplateBuilder) {
+    public SimpleHalClient(final RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    public SimpleHttpClient(final RestTemplate restTemplate) {
+    public SimpleHalClient(final RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 

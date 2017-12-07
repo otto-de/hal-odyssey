@@ -2,7 +2,7 @@ package de.otto.edison.hal.odyssey.controller;
 
 import com.damnhandy.uri.template.UriTemplate;
 import de.otto.edison.hal.odyssey.model.ModelFactory;
-import de.otto.edison.hal.odyssey.service.HttpClient;
+import de.otto.edison.hal.odyssey.service.HalClient;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -30,12 +30,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 public class OdysseyController {
 
     private final ModelFactory modelFactory;
-    private final HttpClient httpClient;
+    private final HalClient halClient;
 
     public OdysseyController(final ModelFactory modelFactory,
-                             final HttpClient httpClient) {
+                             final HalClient halClient) {
         this.modelFactory = modelFactory;
-        this.httpClient = httpClient;
+        this.halClient = halClient;
     }
 
     @GetMapping("/")
@@ -49,7 +49,7 @@ public class OdysseyController {
         }
 
         try {
-            final ResponseEntity<String> response = httpClient.get(url, type);
+            final ResponseEntity<String> response = halClient.get(url, type);
             if (response.getStatusCode().is2xxSuccessful()) {
                 final MediaType contentType = response.getHeaders().getContentType();
                 if (contentType == null || contentType.isCompatibleWith(APPLICATION_JSON) || contentType.isCompatibleWith(APPLICATION_ANY_JSON)) {
@@ -57,9 +57,6 @@ public class OdysseyController {
                 } else {
                     return new ModelAndView("redirect:" + url);
                 }
-            }
-            if (response.getStatusCode().is3xxRedirection()) {
-                return new ModelAndView("redirect:" + url);
             }
         } catch (final HttpStatusCodeException e) {
             return new ModelAndView("index", modelFactory.toErrorModel(url, e));

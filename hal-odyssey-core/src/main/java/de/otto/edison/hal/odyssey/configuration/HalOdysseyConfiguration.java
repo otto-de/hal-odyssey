@@ -4,12 +4,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.otto.edison.hal.odyssey.controller.OdysseyController;
 import de.otto.edison.hal.odyssey.model.LinkRelationService;
 import de.otto.edison.hal.odyssey.model.ModelFactory;
-import de.otto.edison.hal.odyssey.service.HttpClient;
-import de.otto.edison.hal.odyssey.service.SimpleHttpClient;
+import de.otto.edison.hal.odyssey.service.HalClient;
+import de.otto.edison.hal.odyssey.service.SimpleHalClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class HalOdysseyConfiguration {
@@ -33,15 +39,50 @@ public class HalOdysseyConfiguration {
         return new ModelFactory(linkRelationService, objectMapper);
     }
 
-    @ConditionalOnMissingBean(SimpleHttpClient.class)
+    /**
+     * Builds a ClientHttpRequestFactory that is using a
+     * {@link org.apache.http.impl.client.LaxRedirectStrategy lax RedirectStrategy}
+     * to automatically follow redirects for all HEAD, GET, POST, and DELETE requests.
+     *
+     * @return ClientHttpRequestFactory
+     */
+    @ConditionalOnMissingBean(RestTemplate.class)
     @Bean
-    public HttpClient httpClient(final RestTemplateBuilder restTemplateBuilder) {
-        return new SimpleHttpClient(restTemplateBuilder);
+    public ClientHttpRequestFactory clientHttpRequestFactory() {
+        final CloseableHttpClient httpClient = HttpClientBuilder
+                .create()
+                .setRedirectStrategy(new LaxRedirectStrategy())
+                .build();
+        final HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+        factory.setHttpClient(httpClient);
+        return factory;
+    }
+
+    /**
+     * Builds a RestTemplate that is using a configurable ClientHttpRequestFactory to build http requests.
+     *
+     * @param clientHttpRequestFactory the factory
+     * @param restTemplateBuilder the Spring RestTemplateBuilder used to build RestTemplate instances.
+     * @return RestTemplate
+     */
+    @ConditionalOnMissingBean(RestTemplate.class)
+    @Bean
+    public RestTemplate restTemplate(final ClientHttpRequestFactory clientHttpRequestFactory,
+                                     final RestTemplateBuilder restTemplateBuilder) {
+        return restTemplateBuilder
+                .requestFactory(clientHttpRequestFactory)
+                .build();
+    }
+
+    @ConditionalOnMissingBean(HalClient.class)
+    @Bean
+    public HalClient halClient(final RestTemplate restTemplate) {
+        return new SimpleHalClient(restTemplate);
     }
 
     @Bean
     public OdysseyController odysseyController(final ModelFactory modelFactory,
-                                               final HttpClient httpClient) {
-        return new OdysseyController(modelFactory, httpClient);
+                                               final HalClient halClient) {
+        return new OdysseyController(modelFactory, halClient);
     }
 }
