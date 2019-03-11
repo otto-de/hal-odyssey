@@ -21,59 +21,59 @@
       }
     ],
     "self": {
-      "href": "http://localhost:8080/examples/first-page.json",
+      "href": "http://localhost:8081/examples/first-page.json",
       "title": "First page of some collection resource",
       "type": "application/hal+json",
-      "profile": "http://localhost:8080/profiles/example.html"
+      "profile": "http://localhost:8081/profiles/example.html"
     },
     "profile": {
-      "href": "http://localhost:8080/profiles/example.html",
+      "href": "http://localhost:8081/profiles/example.html",
       "name": "example",
       "title": "Description of the example profile",
       "type": "text/html"
     },
     "first": {
-      "href": "http://localhost:8080/examples/first-page.json"
+      "href": "http://localhost:8081/examples/first-page.json"
     },
     "next": {
-      "href": "http://localhost:8080/examples/second-page.json"
+      "href": "http://localhost:8081/examples/second-page.json"
     },
     "last": {
-      "href": "http://localhost:8080/examples/third-page.json"
+      "href": "http://localhost:8081/examples/third-page.json"
     },
     "example:foo": [
       {
-        "href": "http://localhost:8080/examples/foo/42.json",
+        "href": "http://localhost:8081/examples/foo/42.json",
         "title": "Foo 42",
         "type": "application/hal+json",
-        "profile": "http://localhost:8080/profiles/example.html"
+        "profile": "http://localhost:8081/profiles/example.html"
       },
       {
-        "href": "http://localhost:8080/examples/foo/43.json",
+        "href": "http://localhost:8081/examples/foo/43.json",
         "title": "Foo 43",
         "type": "application/hal+json",
-        "profile": "http://localhost:8080/profiles/example.html"
+        "profile": "http://localhost:8081/profiles/example.html"
       }
     ],
     "bar": [
       {
-        "href": "http://localhost:8080/examples/bar/01.json",
+        "href": "http://localhost:8081/examples/bar/01.json",
         "title": "Bar 01",
         "type": "application/hal+json"
       },
       {
-        "href": "http://localhost:8080/examples/bar/02.json",
+        "href": "http://localhost:8081/examples/bar/02.json",
         "title": "Bar 02",
         "type": "application/hal+json"
       },
       {
-        "href": "http://localhost:8080/examples/bar/03.json{?x}{&y}",
+        "href": "http://localhost:8081/examples/bar/03.json{?x}{&y}",
         "templated": true,
         "title": "Templated Bar 03",
         "type": "application/hal+json"
       },
       {
-        "href": "http://localhost:8080/examples/bar/04.json{?x}{&y}",
+        "href": "http://localhost:8081/examples/bar/04.json{?x}{&y}",
         "templated": true,
         "title": "Templated Bar 04",
         "type": "application/hal+json"
@@ -85,10 +85,10 @@
       {
         "_links": {
           "self": {
-            "href": "http://localhost:8080/examples/foo/42.json",
+            "href": "http://localhost:8081/examples/foo/42.json",
             "title": "Foo 42",
             "type": "application/hal+json",
-            "profile": "http://localhost:8080/profiles/example.html"
+            "profile": "http://localhost:8081/profiles/example.html"
           }
         },
         "p1": "1",
@@ -108,10 +108,10 @@
       {
         "_links": {
           "self": {
-            "href": "http://localhost:8080/examples/foo/43.json",
+            "href": "http://localhost:8081/examples/foo/43.json",
             "title": "Foo 43",
             "type": "application/hal+json",
-            "profile": "http://localhost:8080/profiles/example.html"
+            "profile": "http://localhost:8081/profiles/example.html"
           }
         },
         "p1": "2",

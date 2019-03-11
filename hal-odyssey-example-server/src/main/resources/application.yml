@@ -1,0 +1,11 @@
+logging:
+  level:
+    web: debug
+
+server:
+  port: 8081
+
+spring:
+  mvc:
+    servlet:
+      path: /

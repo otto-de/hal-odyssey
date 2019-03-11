@@ -1,7 +1,6 @@
 package de.otto.edison.hal.odyssey.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.otto.edison.hal.odyssey.controller.OdysseyController;
 import de.otto.edison.hal.odyssey.model.LinkRelationService;
 import de.otto.edison.hal.odyssey.model.ModelFactory;
 import de.otto.edison.hal.odyssey.service.HalClient;
@@ -70,7 +69,7 @@ public class HalOdysseyConfiguration {
     public RestTemplate restTemplate(final ClientHttpRequestFactory clientHttpRequestFactory,
                                      final RestTemplateBuilder restTemplateBuilder) {
         return restTemplateBuilder
-                .requestFactory(clientHttpRequestFactory)
+                .requestFactory(() -> clientHttpRequestFactory)
                 .build();
     }
 
@@ -80,9 +79,4 @@ public class HalOdysseyConfiguration {
         return new SimpleHalClient(restTemplate);
     }
 
-    @Bean
-    public OdysseyController odysseyController(final ModelFactory modelFactory,
-                                               final HalClient halClient) {
-        return new OdysseyController(modelFactory, halClient);
-    }
 }

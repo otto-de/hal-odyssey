@@ -1,14 +1,14 @@
 {
   "_links": {
     "self": {
-      "href": "http://localhost:8080/examples/bar/01.json",
+      "href": "http://localhost:8081/examples/bar/01.json",
       "type": "application/hal+json",
-      "profile": "http://localhost:8080/profiles/example.html"
+      "profile": "http://localhost:8081/profiles/example.html"
     },
     "collection": {
-      "href": "http://localhost:8080/examples/first-page.json",
+      "href": "http://localhost:8081/examples/first-page.json",
       "type": "application/hal+json",
-      "profile": "http://localhost:8080/profiles/example.html"
+      "profile": "http://localhost:8081/profiles/example.html"
     }
   }
 }

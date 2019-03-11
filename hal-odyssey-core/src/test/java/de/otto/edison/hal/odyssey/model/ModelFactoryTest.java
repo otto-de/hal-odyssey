@@ -1,35 +1,26 @@
 package de.otto.edison.hal.odyssey.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Links;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static de.otto.edison.hal.Embedded.embedded;
-import static de.otto.edison.hal.Link.curi;
-import static de.otto.edison.hal.Link.item;
-import static de.otto.edison.hal.Link.link;
-import static de.otto.edison.hal.Link.self;
+import static de.otto.edison.hal.Link.*;
 import static de.otto.edison.hal.Links.emptyLinks;
 import static de.otto.edison.hal.Links.linkingTo;
 import static de.otto.edison.hal.odyssey.model.PrettyPrinter.prettyPrintJson;
 import static de.otto.edison.hal.odyssey.model.ResponseModel.EMPTY_RESPONSE;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ModelFactoryTest {
@@ -64,7 +55,7 @@ public class ModelFactoryTest {
     public void shouldCreateMainModel() throws IOException {
         // given
         final ModelFactory modelFactory = new ModelFactory(new LinkRelationService(), new ObjectMapper());
-        final HalRepresentation hal = new HalRepresentation(linkingTo(self("http://example.com")));
+        final HalRepresentation hal = new HalRepresentation(linkingTo().self("http://example.com").build());
         final String json = OBJECT_MAPPER.writeValueAsString(hal);
         // when
         final ResponseEntity<String> response = new ResponseEntity<>(json, HttpStatus.OK);
@@ -83,7 +74,7 @@ public class ModelFactoryTest {
     public void shouldCreateSelfModel() throws IOException {
         // given
         final ModelFactory modelFactory = new ModelFactory(new LinkRelationService(), new ObjectMapper());
-        final HalRepresentation hal = new HalRepresentation(linkingTo(self("http://example.com")));
+        final HalRepresentation hal = new HalRepresentation(linkingTo().self("http://example.com").build());
         final String json = OBJECT_MAPPER.writeValueAsString(hal);
         // when
         final ResponseEntity<String> response = new ResponseEntity<>(json, HttpStatus.OK);
@@ -101,10 +92,11 @@ public class ModelFactoryTest {
     public void shouldCreatePagerModel() throws IOException {
         // given
         final ModelFactory modelFactory = new ModelFactory(new LinkRelationService(), new ObjectMapper());
-        final HalRepresentation hal = new HalRepresentation(linkingTo(
-                link("first", "http://example.com/1"),
-                link("next", "http://example.com/3")
-        ));
+        final HalRepresentation hal = new HalRepresentation(linkingTo()
+                .single(link("first", "http://example.com/1"))
+                .single(link("next", "http://example.com/3"))
+                .build()
+        );
         final String json = OBJECT_MAPPER.writeValueAsString(hal);
         // when
         final ResponseEntity<String> response = new ResponseEntity<>(json, HttpStatus.OK);
@@ -123,7 +115,7 @@ public class ModelFactoryTest {
     public void shouldCreateResponseModel() throws IOException {
         // given
         final ModelFactory modelFactory = new ModelFactory(new LinkRelationService(), new ObjectMapper());
-        final HalRepresentation hal = new HalRepresentation(linkingTo(self("http://example.com")));
+        final HalRepresentation hal = new HalRepresentation(linkingTo().single(self("http://example.com")).build());
         final String json = OBJECT_MAPPER.writeValueAsString(hal);
         // when
         final ResponseEntity<String> response = new ResponseEntity<>(json, HttpStatus.OK);
@@ -164,11 +156,13 @@ public class ModelFactoryTest {
     public void shouldCreateLinkTabs() throws IOException {
         // given
         final ModelFactory modelFactory = new ModelFactory(new LinkRelationService(), new ObjectMapper());
-        final HalRepresentation hal = new HalRepresentation(linkingTo(
-                item("http://example.com/item/1"),
-                item("http://example.com/item/2"),
-                link("example", "http://example.com/example")
-        ));
+        final HalRepresentation hal = new HalRepresentation(linkingTo()
+                .array(
+                        item("http://example.com/item/1"),
+                        item("http://example.com/item/2"))
+                .single(link("example", "http://example.com/example"))
+                .build()
+        );
         final String json = OBJECT_MAPPER.writeValueAsString(hal);
         // when
         final ResponseEntity<String> response = new ResponseEntity<>(json, HttpStatus.OK);
@@ -228,7 +222,10 @@ public class ModelFactoryTest {
     public void shouldCreateCuriModel() throws IOException {
         // given
         final ModelFactory modelFactory = new ModelFactory(new LinkRelationService(), new ObjectMapper());
-        final HalRepresentation hal = new HalRepresentation(linkingTo(curi("ex", "http://example.com/{rel}")));
+        final HalRepresentation hal = new HalRepresentation(
+                linkingTo()
+                        .curi("ex", "http://example.com/{rel}")
+                        .build());
         final String json = OBJECT_MAPPER.writeValueAsString(hal);
         // when
         final ResponseEntity<String> response = new ResponseEntity<>(json, HttpStatus.OK);
